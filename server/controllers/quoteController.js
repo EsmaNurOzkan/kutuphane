@@ -1,5 +1,6 @@
-const Book = require('../models/Book'); 
+const Book = require('../models/Book');
 
+// Tüm alıntıları getir
 exports.getAllQuotes = async (req, res) => {
   try {
     const { bookId } = req.params;
@@ -12,9 +13,11 @@ exports.getAllQuotes = async (req, res) => {
     res.status(200).json({ quotes: book.quotes });
   } catch (err) {
     res.status(500).json({ message: 'Bir hata oluştu.', error: err.message });
-  } 
+  }
 };
 
+
+// Alıntıyı güncelle
 exports.updateQuote = async (req, res) => {
   try {
     const { bookId, quoteId, updatedQuote } = req.body;
@@ -29,8 +32,10 @@ exports.updateQuote = async (req, res) => {
       return res.status(404).json({ message: 'Alıntı bulunamadı.' });
     }
 
+    // Alıntı metnini güncelle
     quote.text = updatedQuote.text || quote.text;
 
+    // Alıntı notlarını güncelle
     if (updatedQuote.quoteNotes) {
       updatedQuote.quoteNotes.forEach((note) => {
         const existingNote = quote.quoteNotes.id(note._id);
@@ -42,6 +47,12 @@ exports.updateQuote = async (req, res) => {
       });
     }
 
+    // Tags güncelle (var olanları sil, yenilerini ekle)
+    if (Array.isArray(updatedQuote.tags)) {
+      // Verilen tag'lerle güncelle, bu tag'lerle eşleşmeyenleri kaldır
+      quote.tags = updatedQuote.tags;
+    }
+
     await book.save();
     res.status(200).json({ message: 'Alıntı başarıyla güncellendi.', quote });
   } catch (err) {
@@ -49,6 +60,8 @@ exports.updateQuote = async (req, res) => {
   }
 };
 
+
+// Alıntıyı sil
 exports.deleteQuote = async (req, res) => {
   try {
     const { bookId, quoteId, noteId } = req.body;
@@ -88,20 +101,17 @@ exports.deleteQuote = async (req, res) => {
   }
 };
 
-
-  
+// Yeni alıntı ekle
 exports.addQuote = async (req, res) => {
-  const { bookId, text, quoteNotes = [], pageNo } = req.body;
+  const { bookId, text, quoteNotes = [], pageNo, tags = [] } = req.body;
 
   try {
     const book = await Book.findById(bookId);
     if (!book) return res.status(404).json({ msg: 'Kitap bulunamadı' });
 
-    if (pageNo < 1 || pageNo > book.pageCount) {
-      return res.status(400).json({ msg: `Sayfa numarası 1 ile ${book.pageCount} arasında olmalıdır.` });
-    }
+    const newQuote = { text, quoteNotes, pageNo, tags };
 
-    book.quotes.push({ text, quoteNotes, pageNo });
+    book.quotes.push(newQuote);
     await book.save();
 
     res.status(200).json(book);

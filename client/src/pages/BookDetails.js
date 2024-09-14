@@ -1,17 +1,21 @@
-
-
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Modal, Nav, Navbar, Dropdown, DropdownButton } from 'react-bootstrap';
+import React, { useContext, useState, useEffect } from 'react';
+import { Container, Row, Col, Card, Button, Modal, Nav, Navbar } from 'react-bootstrap';
 import AddQuote from './AddQuote';
 import AddNote from './AddNote';
 import Export from './Export';
 import AddTag from "./AddTag";
 import axios from 'axios'; 
+import { AppContext } from '../AppContext';
+
 
 const BookDetails = ({ book }) => {
+  const { notesUpdated, setNotesUpdated } = useContext(AppContext); 
+  const { quotesUpdated, setQuotesUpdated } = useContext(AppContext); 
   const [showModal, setShowModal] = useState('');
   const [tags, setTags] = useState([]); 
   const [selectedTag, setSelectedTag] = useState(null); 
+  const [notesCount, setNotesCount] = useState(book.notes.length);
+  const [quotesCount, setQuotesCount] = useState(book.quotes.length);
 
   const handleShow = (modalType) => {
     setShowModal(modalType);
@@ -26,7 +30,6 @@ const BookDetails = ({ book }) => {
     if (modalType === 'addTag') {
       fetchTags();
     }
-    
     setTimeout(() => {
       handleClose(); 
     }, 2000);
@@ -42,11 +45,27 @@ const BookDetails = ({ book }) => {
     }
   };
 
+  const fetchUpdatedBook = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/my-shelve/books/${book._id}/details`);
+      setNotesCount(response.data.notes.length);
+      setQuotesCount(response.data.quotes.length);
+    } catch (error) {
+      console.error('Error fetching updated book data:', error);
+    }
+  };
+
   useEffect(() => {
     if (book && book._id) {
       fetchTags();
     }
   }, [book]);
+
+  useEffect(() => {
+    if (book && book._id) {
+      fetchUpdatedBook();
+    }
+  }, [notesUpdated, quotesUpdated]);
 
   const handleTagClick = (tag) => {
     setSelectedTag(tag); 
@@ -101,35 +120,31 @@ const BookDetails = ({ book }) => {
   }
 
   return (
-    <Container  className="mt-4">
-      <Row className="justify-content-center mb-4">
-        <Col  >
-          <Dropdown>
-            <Dropdown.Toggle className="btn btn-sm" variant="outline-secondary" id="dropdown-basic">
-              İşlemler
-            </Dropdown.Toggle>
+    <Container className="mt-4">
+      <Navbar bg="light" expand="lg" className='fs-6'>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ms-auto">
+            <Nav.Link onClick={() => handleShow('addQuote')}>Alıntı Ekle</Nav.Link>
+            <Nav.Link onClick={() => handleShow('addNote')}>Sayfa Notu Ekle</Nav.Link>
+            <Nav.Link onClick={() => handleShow('addTag')}>Etiket Ekle</Nav.Link>
+            <Nav.Link onClick={() => handleShow('export')}>Dışa Aktar</Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
 
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={() => handleShow('addQuote')}>Alıntı Ekle</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleShow('addNote')}>Sayfa Notu Ekle</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleShow('addTag')}>Etiket Ekle</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleShow('export')}>Dışa Aktar</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-      </Row>
-      <Row className="justify-content-center">
-        <Col  >
+      <Row className="justify-content-center mb-4">
+        <Col>
           <Card>
             <Card.Img variant="top" src={coverImageUrl} alt={book.title} />
             <Card.Body>
               <Card.Title>{book.title}</Card.Title>
               <Card.Subtitle className="mb-2 text-muted">{book.author}</Card.Subtitle>
               <Card.Text>
+                id: {book._id}
                 <strong>Sayfa Sayısı:</strong> {book.pageCount} <br />
                 <strong>ISBN:</strong> {book.isbn} <br /> <br />
-                Bu kitapta <strong>{book.quotes.length}</strong> alıntınız ve <strong>{book.notes.length}</strong> notunuz var!
-
+                Bu kitapta <strong>{quotesCount}</strong> alıntınız ve <strong>{notesCount}</strong> notunuz var!
               </Card.Text>
               <Card.Footer>
                 <strong>Etiketler:</strong>

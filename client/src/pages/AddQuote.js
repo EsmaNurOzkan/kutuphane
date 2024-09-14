@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import { Form, Button, Alert, Modal } from 'react-bootstrap';
 import Ocr from './Ocr'; // Adjust the path as needed
+import { AppContext } from '../AppContext';
+
 
 const AddQuote = ({ bookId, pageCount, onSuccess }) => {
+  const { quotesUpdated, setQuotesUpdated } = useContext(AppContext); // useContext ile alın
   const [quoteText, setQuoteText] = useState('');
   const [quoteNotes, setQuoteNotes] = useState([{ text: '' }]);
   const [pageNo, setPageNo] = useState('');
+  const [tags, setTags] = useState([]); // New state for tags
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showOcrModal, setShowOcrModal] = useState(false);
@@ -26,6 +30,14 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
   const removeQuoteNote = (index) => {
     const newQuoteNotes = quoteNotes.filter((_, i) => i !== index);
     setQuoteNotes(newQuoteNotes);
+  };
+
+  const handleTagsChange = (e) => {
+    const newTags = e.target.value
+      .split(',')
+      .map(tag => tag.trim())
+      .filter(tag => tag !== ''); // No need to map to { text: tag }
+    setTags(newTags); // Directly set tags as an array of strings
   };
 
   const handleOcrResults = (results) => {
@@ -56,12 +68,11 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if ( pageNo > pageCount) {
+    if (pageNo > pageCount) {
       setError(`Sayfa sayısını aştınız. Lütfen ${pageCount} veya daha düşük bir değer girin.`);
       setTimeout(() => setError(''), 3000);
       return;
     }
-  
 
     if (!quoteText.trim()) {
       setError("Lütfen alıntı metnini doldurun.");
@@ -76,11 +87,15 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
         text: quoteText,
         pageNo,
         quoteNotes: quoteNotes.filter(note => note.text.trim() !== ''), // Filter out empty notes
+        tags, // Tags in the ["tag1", "tag2"] format
       };
 
       await axios.post('http://localhost:5000/api/quote/add', dataToSend);
       setSuccess('Alıntı başarıyla eklendi.');
       setError('');
+
+      setQuotesUpdated(true); // Başarı durumu güncellenir
+
 
       if (onSuccess) onSuccess();
     } catch (error) {
@@ -91,15 +106,23 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
 
   return (
     <div className="container mt-4">
-      <h2>Alıntı Ekle</h2>
       {error && <Alert variant="danger">{error}</Alert>}
       {success && <Alert variant="success">{success}</Alert>}
       <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="pageNo">
+          <Form.Label>Sayfa Numarası</Form.Label>
+          <Form.Control
+            value={pageNo}
+            onChange={handlePageNoChange}
+            required 
+          />
+        </Form.Group>       
+
         <Form.Group controlId="quoteText">
           <Form.Label>Alıntı Metni</Form.Label>
           <Form.Control
             as="textarea"
-            rows={3}
+            rows={5}
             value={quoteText}
             onChange={handleQuoteTextChange}
           />
@@ -108,23 +131,13 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
           </Button>
         </Form.Group>
 
-        <Form.Group controlId="pageNo">
-          <Form.Label>Sayfa Numarası</Form.Label>
-          <Form.Control
-            type="number"
-            value={pageNo}
-            onChange={handlePageNoChange}
-            requred 
-            min={1}
-          />
-        </Form.Group>
-
         <Form.Group controlId="quoteNotes">
           <Form.Label>Alıntı Notları (Opsiyonel)</Form.Label>
           {quoteNotes.map((note, index) => (
             <div key={index} className="d-flex mb-2 align-items-center">
               <Form.Control
-                type="text"
+                as="textarea"
+                rows={3}
                 value={note.text}
                 onChange={(e) => handleQuoteNoteChange(index, e)}
               />
@@ -136,12 +149,21 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
               </Button>
             </div>
           ))}
-          <Button variant="primary" onClick={addQuoteNote}>
-            Not Ekle
+          <Button variant="primary" className=" btn-sm mb-2" onClick={addQuoteNote}>
+            Daha fazla not ekle
           </Button>
         </Form.Group>
 
-        <Button variant="primary" type="submit">
+        <Form.Group controlId="tags">
+          <Form.Label>Tag'ler (virgül ile ayırın)</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Tag'leri virgülle ayırın"
+            onChange={handleTagsChange}
+          />
+        </Form.Group>
+
+        <Button variant="success" type="submit">
           Kaydet
         </Button>
       </Form>

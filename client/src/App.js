@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { AppProvider } from './AppContext'; 
 import { jwtDecode } from 'jwt-decode';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -62,7 +63,8 @@ function App() {
   };
 
   return (
-    <Router>
+    <AppProvider>
+      <Router>
       <Helmet>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -70,10 +72,12 @@ function App() {
 
         <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet"/>
 
+        <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet"></link>
+
     </Helmet>
       <MyNavbar /> 
          {showExpiredMessage && (
-        <div style={{ opacity:"0.5", display: 'inline-block', justifyContent: 'center', alignItems: 'center' , backgroundColor: 'crimson', color: 'white', textAlign: 'center', width:"auto"}}>
+        <div style={{ margin:"1rem", padding:"0.5 rem", color:"black", opacity:"0.3", display: 'inline-block', justifyContent: 'center', alignItems: 'center' , backgroundColor: 'crimson', color: 'white', textAlign: 'center', width:"auto"}}>
         Oturum süreniz doldu, lütfen tekrar giriş yapın.
       </div> 
       )}
@@ -90,6 +94,7 @@ function App() {
         <Route path="*" element={<Navigate to="/home" />} /> 
       </Routes>
     </Router>
+    </AppProvider>
   );
 }
 

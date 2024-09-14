@@ -8,12 +8,10 @@
 }
 
 body {
-  font-family: 'DM Serif Text', serif;
+  font-family: "Merriweather", serif;
   font-weight : 600;
   font-size: large;
 }
-
-
 
 
 @media (prefers-reduced-motion: no-preference) {

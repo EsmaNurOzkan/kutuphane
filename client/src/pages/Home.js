@@ -24,20 +24,20 @@ function Home() {
                 <div className='m-2'>
                   <img src={shelveLogo} alt="Kütüphane Logo" style={{ width: '12rem', height: 'auto' }} />
                 </div>
-                <Card.Title as="h2" style={{ fontFamily: 'DM Serif Text, serif' }}>Hoşgeldiniz!</Card.Title>
+                <Card.Title as="h2" >Hoşgeldiniz!</Card.Title>
                 <Card.Text>
-                  <p className='fs-5' style={{ fontFamily: 'DM Serif Text, serif' }}>Kendi dijital kütüphanenizi oluşturabileceğiniz harika bir platforma adım atıyorsunuz. Bu uygulama sayesinde, en sevdiğiniz kitapları bir araya getirip kişisel kitaplığınızı oluşturabilir, unutulmaz alıntılarınızı not alabilir ve dilediğiniz zaman bu notları okuyarak ilham alabilirsiniz.</p>
+                  <p className='fs-5' >Kendi dijital kütüphanenizi oluşturabileceğiniz harika bir platforma adım atıyorsunuz. Bu uygulama sayesinde, en sevdiğiniz kitapları bir araya getirip kişisel kitaplığınızı oluşturabilir, unutulmaz alıntılarınızı not alabilir ve dilediğiniz zaman bu notları okuyarak ilham alabilirsiniz.</p>
                 </Card.Text>
                 <Card.Text>
-                  <p className='fs-5' style={{ fontFamily: 'DM Serif Text, serif' }}>Kitaplarınızı ve alıntılarınızı güvenle saklayın, her an elinizin altında bulundurun. Dahası, bu değerli bilgileri ve anıları kolayca dışa aktararak paylaşabilir veya yedekleyebilirsiniz.</p>
+                  <p className='fs-5' >Kitaplarınızı ve alıntılarınızı güvenle saklayın, her an elinizin altında bulundurun. Dahası, bu değerli bilgileri ve anıları kolayca dışa aktararak paylaşabilir veya yedekleyebilirsiniz.</p>
                 </Card.Text>
                 {!token && (
                   <div className="d-flex justify-content-center mt-4">
                     <Link to="/login">
-                      <Button variant="primary" style={{ fontFamily: "Cormorant, serif", fontWeight : 500 }} className="mr-2 btn-md">Giriş Yap</Button>
+                      <Button variant="primary" style={{ fontWeight : 500 }} className="mr-2 btn-md">Giriş Yap</Button>
                     </Link>
                     <Link to="/register">
-                      <Button variant="success" style={{ fontFamily: "Cormorant, serif", fontWeight : 500 }} className="btn-md" >Kayıt Ol</Button>
+                      <Button variant="success" style={{ fontWeight : 500 }} className="btn-md" >Kayıt Ol</Button>
                     </Link>
                   </div>
                 )}

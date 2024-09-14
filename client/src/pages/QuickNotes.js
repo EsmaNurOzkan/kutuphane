@@ -108,7 +108,7 @@ function QuickNotes() {
               <Form.Control
                 type="text"
                 as="textarea"
-                rows={3}
+                rows={7}
                 value={newNote}
                 onChange={(e) => setNewNote(e.target.value)}
                 placeholder="Notunuzu girin"
@@ -152,7 +152,7 @@ function QuickNotes() {
               <Modal.Body>
                 <Form.Control
                   as="textarea"
-                  rows={3}
+                  rows={5}
                   value={editNote}
                   onChange={(e) => setEditNote(e.target.value)}
                 />

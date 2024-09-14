@@ -1,6 +1,14 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const tagSchema = new mongoose.Schema({
+  text: {
+    type: String,
+    required: true
+  }
+}, { _id: true });
+
+
 const quoteNoteSchema = new Schema({
   text: {
     type: String,
@@ -19,8 +27,12 @@ const quoteSchema = new Schema({
     default: [] 
   },
   pageNo: {
-    type: Number,
+    type: Schema.Types.Mixed,
     required: true
+  },
+  tags: {
+    type: [String], 
+    default: []
   }
 }, { _id: true });
 
@@ -31,17 +43,16 @@ const noteSchema = new Schema({
     required: true
   },
   pageNo: {
-    type: Number,
+    type: Schema.Types.Mixed, 
     required: false
+  },
+  tags: {
+    type: [String], 
+    default: []
   }
 }, { _id: true });
 
-const tagSchema = new mongoose.Schema({
-  text: {
-    type: String,
-    required: true
-  }
-}, { _id: true });
+
 
 const bookSchema = new mongoose.Schema({
   user: {

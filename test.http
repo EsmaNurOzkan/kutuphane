@@ -1,0 +1,52 @@
+# POST http://localhost:5000/api/note/add
+# Content-Type: application/json
+
+# {
+#   "bookId": "66df41bbca82a1bc81a93f83",
+#   "text": "Yeni 2. not",
+#   "pageNo": 46,
+#   "tags": ["önemli", "dikkat"]
+# }
+
+PATCH http://localhost:5000/api/note/update/66e54633afa35de4ea0479e1
+Content-Type: application/json
+
+{
+  "bookId": "66df41bbca82a1bc81a93f83",
+  "text": "Güncellenmiş not metni",
+  "pageNo": 50,
+  "tags": ["güncel", "önemli"]
+}
+
+
+
+
+
+
+# PATCH http://localhost:5000/api/quote/update
+# Content-Type: application/json
+
+# {
+#   "bookId": "66df4198ca82a1bc81a93f81", 
+#   "quoteId": "66e4632b8da7953c1fbaee6d", 
+#   "updatedQuote": {
+#     "text": "Updated quote text.",
+#     "pageNo": 42,
+#     "tags": ["inspiration", "life"]
+#   } 
+# }
+
+
+# PATCH http://localhost:5000/api/quote/add
+# Content-Type: application/json
+
+# {
+#   "bookId": "66df41bbca82a1bc81a93f83",
+#   "text": "Bu bir örnek alıntıdır.",
+#   "quoteNotes": [
+#     { "text": "Bu alıntı önemli" }
+#   ],
+#   "pageNo": 42,
+#   "tags": [ "life"]
+# }
+
