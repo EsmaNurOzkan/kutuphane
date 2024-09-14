@@ -31,7 +31,7 @@ const Notes = ({ book }) => {
     };
 
     fetchNotes();
-  }, [book._id, notesUpdated]); // notesUpdated değiştiğinde notları yenile
+  }, [book._id, notesUpdated]); 
 
   const updateNote = async () => {
     try {
@@ -42,7 +42,7 @@ const Notes = ({ book }) => {
         tags: editTags.split(',').map(tag => tag.trim())
       });
       setNotes(response.data.notes);
-      setNotesUpdated(prev => !prev); // global state'i güncelle
+      setNotesUpdated(prev => !prev); 
       setShowEditModal(false);
       setShowDetailModal(false); 
       setDeleteSuccessMessage('Not başarıyla güncellendi!');
@@ -57,7 +57,7 @@ const Notes = ({ book }) => {
       const response = await axios.delete(`http://localhost:5000/api/note/${book._id}/${noteId}`);
       setNotes(response.data.notes);
       setDeleteSuccessMessage('Not başarıyla silindi!');
-      setNotesUpdated(prev => !prev); // global state'i güncelle
+      setNotesUpdated(prev => !prev); 
       setShowDetailModal(false);
       setTimeout(() => setDeleteSuccessMessage(''), 2000);
     } catch (error) {

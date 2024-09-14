@@ -1,15 +1,14 @@
 const Book = require('../models/Book');
 
 exports.addNote = async (req, res) => {
-  const { bookId, text, pageNo, tags } = req.body; // tags parametresini ekledik
-
+  const { bookId, text, pageNo, tags } = req.body; 
   try {
     const book = await Book.findById(bookId);
     if (!book) {
       return res.status(404).json({ message: 'Kitap bulunamadı' });
     }
 
-    const newNote = { text, pageNo, tags }; // tags'i de ekledik
+    const newNote = { text, pageNo, tags }; 
     book.notes.push(newNote);
     await book.save();
 
@@ -43,28 +42,24 @@ exports.deleteNote = async (req, res) => {
 };
 
 exports.updateNote = async (req, res) => {
-  const { noteId } = req.params; // Note ID parametre olarak alınıyor
-  const { bookId, text, pageNo, tags } = req.body; // Book ID ve diğer veriler body'den alınıyor
+  const { noteId } = req.params;
+  const { bookId, text, pageNo, tags } = req.body; 
 
   try {
-    // Kitabı bul
     const book = await Book.findById(bookId);
     if (!book) {
       return res.status(404).json({ message: 'Kitap bulunamadı' });
     }
 
-    // Notu bul
     const note = book.notes.id(noteId);
     if (!note) {
       return res.status(404).json({ message: 'Not bulunamadı' });
     }
 
-    // Notu güncelle
     note.text = text || note.text;
     note.pageNo = pageNo || note.pageNo;
     note.tags = tags || note.tags;
 
-    // Kitabı kaydet
     await book.save();
     res.status(200).json({ message: 'Not güncellendi', notes: book.notes });
   } catch (error) {

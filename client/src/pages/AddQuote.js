@@ -1,20 +1,20 @@
 import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import { Form, Button, Alert, Modal } from 'react-bootstrap';
-import Ocr from './Ocr'; // Adjust the path as needed
+import Ocr from './Ocr'; 
 import { AppContext } from '../AppContext';
 
 
 const AddQuote = ({ bookId, pageCount, onSuccess }) => {
-  const { quotesUpdated, setQuotesUpdated } = useContext(AppContext); // useContext ile alın
+  const { quotesUpdated, setQuotesUpdated } = useContext(AppContext); 
   const [quoteText, setQuoteText] = useState('');
   const [quoteNotes, setQuoteNotes] = useState([{ text: '' }]);
   const [pageNo, setPageNo] = useState('');
-  const [tags, setTags] = useState([]); // New state for tags
+  const [tags, setTags] = useState([]); 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showOcrModal, setShowOcrModal] = useState(false);
-  const [ocrTarget, setOcrTarget] = useState('quoteText'); // Can be 'quoteText' or index of quoteNotes
+  const [ocrTarget, setOcrTarget] = useState('quoteText'); 
 
   const handleQuoteTextChange = (e) => setQuoteText(e.target.value);
   const handlePageNoChange = (e) => setPageNo(e.target.value);
@@ -36,8 +36,8 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
     const newTags = e.target.value
       .split(',')
       .map(tag => tag.trim())
-      .filter(tag => tag !== ''); // No need to map to { text: tag }
-    setTags(newTags); // Directly set tags as an array of strings
+      .filter(tag => tag !== ''); 
+    setTags(newTags); 
   };
 
   const handleOcrResults = (results) => {
@@ -52,7 +52,7 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
       }
     }
     setShowOcrModal(false);
-    setOcrTarget('quoteText'); // Reset target after use
+    setOcrTarget('quoteText'); 
   };
 
   const handleTextOcrClick = () => {
@@ -86,15 +86,15 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
         bookId,
         text: quoteText,
         pageNo,
-        quoteNotes: quoteNotes.filter(note => note.text.trim() !== ''), // Filter out empty notes
-        tags, // Tags in the ["tag1", "tag2"] format
+        quoteNotes: quoteNotes.filter(note => note.text.trim() !== ''),
+        tags, 
       };
 
       await axios.post('http://localhost:5000/api/quote/add', dataToSend);
       setSuccess('Alıntı başarıyla eklendi.');
       setError('');
 
-      setQuotesUpdated(true); // Başarı durumu güncellenir
+      setQuotesUpdated(true); 
 
 
       if (onSuccess) onSuccess();

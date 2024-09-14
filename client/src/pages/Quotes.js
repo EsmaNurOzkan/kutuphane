@@ -1,9 +1,4 @@
-//update de sıkıntı var urlleri check et sonra addquote.js degıstır (tags arrayı ısın ıcnıe gırdı ve strıng arrayıdır tags)
-//sonra notlar ılgılı her seyı guncelle (tags orda da tanımlı artık) (on tarafta guncelleme, ekleme kaldı bırde fetch etmede tags gozukmesı olayı)
-//sonrasında sayfalar arası alısverıs (addquote ve addnote basarısı, quotes ve notes'a aktarılacak. addquote, addnote, quotes, notes sayfalarındakı basarı durumları(basarıyla ekleme basarıyla silme, basarıyla editleme) bookdetaılse aktarılacak)
-//okuma modu
-//pdf ındırmede sıkıntı, font hatası
-//kıtaplıgımda ara secenegi
+
 
 import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';

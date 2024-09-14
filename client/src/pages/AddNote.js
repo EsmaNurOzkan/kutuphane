@@ -5,7 +5,7 @@ import Ocr from './Ocr';
 import { AppContext } from '../AppContext';
 
 const AddNote = ({ bookId, pageCount, onSuccess }) => {
-  const { notesUpdated, setNotesUpdated } = useContext(AppContext); // useContext ile alın
+  const { notesUpdated, setNotesUpdated } = useContext(AppContext); 
   const [text, setText] = useState('');
   const [pageNo, setPageNo] = useState('');
   const [tags, setTags] = useState('');
@@ -39,7 +39,7 @@ const AddNote = ({ bookId, pageCount, onSuccess }) => {
       });
       setSuccess('Not başarıyla eklendi.');
       setError('');
-      setNotesUpdated(true); // Başarı durumu güncellenir
+      setNotesUpdated(true); 
       
       if (onSuccess) onSuccess();
 

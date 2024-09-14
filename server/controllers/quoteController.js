@@ -1,6 +1,5 @@
 const Book = require('../models/Book');
 
-// Tüm alıntıları getir
 exports.getAllQuotes = async (req, res) => {
   try {
     const { bookId } = req.params;
@@ -17,7 +16,6 @@ exports.getAllQuotes = async (req, res) => {
 };
 
 
-// Alıntıyı güncelle
 exports.updateQuote = async (req, res) => {
   try {
     const { bookId, quoteId, updatedQuote } = req.body;
@@ -32,10 +30,8 @@ exports.updateQuote = async (req, res) => {
       return res.status(404).json({ message: 'Alıntı bulunamadı.' });
     }
 
-    // Alıntı metnini güncelle
     quote.text = updatedQuote.text || quote.text;
 
-    // Alıntı notlarını güncelle
     if (updatedQuote.quoteNotes) {
       updatedQuote.quoteNotes.forEach((note) => {
         const existingNote = quote.quoteNotes.id(note._id);
@@ -47,9 +43,7 @@ exports.updateQuote = async (req, res) => {
       });
     }
 
-    // Tags güncelle (var olanları sil, yenilerini ekle)
     if (Array.isArray(updatedQuote.tags)) {
-      // Verilen tag'lerle güncelle, bu tag'lerle eşleşmeyenleri kaldır
       quote.tags = updatedQuote.tags;
     }
 
@@ -61,7 +55,6 @@ exports.updateQuote = async (req, res) => {
 };
 
 
-// Alıntıyı sil
 exports.deleteQuote = async (req, res) => {
   try {
     const { bookId, quoteId, noteId } = req.body;
@@ -101,7 +94,6 @@ exports.deleteQuote = async (req, res) => {
   }
 };
 
-// Yeni alıntı ekle
 exports.addQuote = async (req, res) => {
   const { bookId, text, quoteNotes = [], pageNo, tags = [] } = req.body;
 
