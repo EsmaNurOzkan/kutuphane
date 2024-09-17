@@ -102,22 +102,27 @@ const Notes = ({ book }) => {
   }
 
   return (
-    <Container>
+    <Container className="text-center">
       {deleteSuccessMessage && <Alert variant="success">{deleteSuccessMessage}</Alert>}
       {error && <Alert variant="danger">{error}</Alert>}
+      <h3 className="my-2">Notlarım</h3>
 
-      {notes.length === 0 && !loading && <p>Henüz not bulunmuyor.</p>}
+      <Container style={{ maxHeight: '45vh', overflowY: 'auto' }}>
+        {notes.length === 0 && !loading && <p>Henüz not almadınız.</p>}
 
-      {notes.map((note) => (
-        <Card key={note._id} className="mb-3" onClick={() => openDetailModal(note)}>
-          <Card.Body>
-            <Card.Title>Sayfa {note.pageNo}</Card.Title>
-            <Card.Text>{note.text}</Card.Text>
-          </Card.Body>
-        </Card>
-      ))}
+        {notes.map((note) => (
+          <Card key={note._id} className="my-2" onClick={() => openDetailModal(note)}>
+            <Card.Body>
+              <Card.Title>Sayfa {note.pageNo}</Card.Title>
+              <Card.Text>{note.text}</Card.Text>
+              <Card.Text>
+                <strong>Tagler:</strong> {note.tags.map(tag => `#${tag}`).join(' ')}
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        ))}
+      </Container>
 
-      {/* Detail Modal */}
       <Modal show={showDetailModal} onHide={closeDetailModal}>
         <Modal.Header closeButton>
           <Modal.Title>Not Detayı</Modal.Title>
@@ -127,7 +132,7 @@ const Notes = ({ book }) => {
             <>
               <h4>Sayfa: {selectedNote.pageNo}</h4>
               <p>{selectedNote.text}</p>
-              <p><strong>Etiketler:</strong> {selectedNote.tags.join(', ')}</p>
+              <p><strong>Tagler:</strong> {selectedNote.tags.map(tag => `#${tag}`).join(' ')}</p>
             </>
           )}
         </Modal.Body>
@@ -141,7 +146,6 @@ const Notes = ({ book }) => {
         </Modal.Footer>
       </Modal>
 
-      {/* Delete Confirm Modal */}
       <Modal show={showDeleteConfirmModal} onHide={closeDeleteConfirmModal}>
         <Modal.Header closeButton>
           <Modal.Title>Not Silme Onayı</Modal.Title>
@@ -162,7 +166,6 @@ const Notes = ({ book }) => {
         </Modal.Footer>
       </Modal>
 
-      {/* Edit Modal */}
       <Modal show={showEditModal} onHide={closeEditModal}>
         <Modal.Header closeButton>
           <Modal.Title>Notu Düzenle</Modal.Title>
@@ -188,7 +191,7 @@ const Notes = ({ book }) => {
                 />
               </Form.Group>
               <Form.Group controlId="editTags">
-                <Form.Label>Etiketler</Form.Label>
+                <Form.Label>Tagler</Form.Label>
                 <Form.Control
                   type="text"
                   value={editTags}

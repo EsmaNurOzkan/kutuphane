@@ -85,9 +85,10 @@ const AddNote = ({ bookId, pageCount, onSuccess }) => {
           />
         </Form.Group>
         <Form.Group controlId="tags">
-          <Form.Label>Etiketler (virgüllerle ayırın)</Form.Label>
+          <Form.Label>Tagler (virgülle ayırarak yazın)</Form.Label>
           <Form.Control
             type="text"
+            placeholder="Tagler"
             value={tags}
             onChange={(e) => setTags(e.target.value)}
           />

@@ -83,6 +83,7 @@ exports.searchBooks = async (req, res) => {
       params: {
         q: query,
         key: apiKey,
+        maxResults: 21
       },
     });
 

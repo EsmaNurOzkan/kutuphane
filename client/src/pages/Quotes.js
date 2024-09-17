@@ -2,12 +2,12 @@
 
 import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Button, Card, ListGroup, Modal, Form, Alert } from 'react-bootstrap';
+import { Container, Button, Card, ListGroup, Modal, Form, Alert, Spinner } from 'react-bootstrap';
 import { AppContext } from '../AppContext';
 
 
 const Quotes = ({ book }) => {
-  const { quotesUpdated, setQuotesUpdated } = useContext(AppContext); // useContext ile alın
+  const { quotesUpdated, setQuotesUpdated } = useContext(AppContext); 
   const [quotes, setQuotes] = useState([]);
   const [selectedQuote, setSelectedQuote] = useState(null);
   const [editQuote, setEditQuote] = useState({ text: '', pageNo: '', quoteNotes: [], tags: [] });
@@ -17,6 +17,8 @@ const Quotes = ({ book }) => {
   const [showDeleteNoteModal, setShowDeleteNoteModal] = useState(false);
   const [noteToDelete, setNoteToDelete] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false); // Loading state
+
 
   useEffect(() => {
     const fetchQuotes = async () => {
@@ -177,20 +179,28 @@ const Quotes = ({ book }) => {
 
   return (
     <Container className="text-center">
-      <h2 my-2>Alıntılarım</h2>
+      <h3 my-2>Alıntılarım</h3>
       <Container style={{maxHeight: '45vh', overflowY: 'auto'}}>
-        {quotes.length === 0 ? (
-          <p>Henüz alıntı yapmadınız.</p>
+        {loading ? ( 
+          <div>
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Alıntılar yükleniyor...</span>
+            </Spinner>
+            
+          </div>
         ) : (
-          quotes.map((quote) => (
-            <Card key={quote._id} style={{ marginBottom: '20px' }} onClick={() => handleShowDetailsModal(quote)}>
-              <Card.Body>
-                id: {quote._id}
-                <Card.Title>{quote.text}</Card.Title>
-                <Card.Subtitle className="mb-2 text-muted">Sayfa Numarası: {quote.pageNo}</Card.Subtitle>
-              </Card.Body>
-            </Card>
-          ))
+          quotes.length === 0 ? (
+            <p>Henüz alıntı yapmadınız.</p>
+          ) : (
+            quotes.map((quote) => (
+              <Card key={quote._id} className="my-2" onClick={() => handleShowDetailsModal(quote)}>
+                <Card.Body>
+                  <Card.Title>{quote.text}</Card.Title>
+                  <Card.Subtitle className="mb-2 text-muted">Sayfa Numarası: {quote.pageNo}</Card.Subtitle>
+                </Card.Body>
+              </Card>
+            ))
+          )
         )}
       </Container>
 
@@ -223,7 +233,7 @@ const Quotes = ({ book }) => {
               <h4>Tag'ler</h4>
               <p>
                 {selectedQuote.tags && selectedQuote.tags.length > 0 ? (
-                  selectedQuote.tags.join(', ')
+                  selectedQuote.tags.map(tag => `#${tag}`).join(', ') // # Display tags with #
                 ) : (
                   'Tag yok'
                 )}
@@ -240,57 +250,65 @@ const Quotes = ({ book }) => {
 
       <Modal show={showEditModal} onHide={handleCloseEditModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Alıntı Düzenle</Modal.Title>
+          <Modal.Title>Alıntıyı Düzenle</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {selectedQuote && (
-            <Form>
-              <Form.Group controlId="quoteText">
-                <Form.Label>Alıntı Metni</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={editQuote.text}
-                  onChange={(e) => setEditQuote({ ...editQuote, text: e.target.value })}
-                />
-              </Form.Group>
-              <Form.Group controlId="pageNo">
-                <Form.Label>Sayfa Numarası</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={editQuote.pageNo}
-                  onChange={(e) => setEditQuote({ ...editQuote, pageNo: e.target.value })}
-                />
-              </Form.Group>
-              <Form.Group controlId="quoteNotes">
-                <Form.Label>Notlar</Form.Label>
-                {editQuote.quoteNotes && editQuote.quoteNotes.length > 0 ? (
-                  editQuote.quoteNotes.map((note, index) => (
-                    <Form.Control
-                      key={index}
-                      type="text"
-                      value={note.text}
-                      onChange={(e) => {
-                        const updatedNotes = [...editQuote.quoteNotes];
-                        updatedNotes[index].text = e.target.value;
-                        setEditQuote({ ...editQuote, quoteNotes: updatedNotes });
-                      }}
-                    />
-                  ))
-                ) : (
-                  <p>Not yok</p>
-                )}
-              </Form.Group>
-              <Form.Group controlId="tags">
-                <Form.Label>Tag'ler</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={editQuote.tags.join(', ')}
-                  onChange={(e) => setEditQuote({ ...editQuote, tags: e.target.value.split(',').map(tag => tag.trim()) })}
-                />
-              </Form.Group>
-              {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
-            </Form>
-          )}
+          <Form>
+            <Form.Group controlId="formQuoteText">
+              <Form.Label>Alıntı Metni</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Alıntı metnini girin"
+                value={editQuote.text}
+                onChange={(e) => setEditQuote({ ...editQuote, text: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group controlId="formPageNo">
+              <Form.Label>Sayfa Numarası</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Sayfa numarasını girin"
+                value={editQuote.pageNo}
+                onChange={(e) => setEditQuote({ ...editQuote, pageNo: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group controlId="formQuoteNotes">
+              <Form.Label>Notlar</Form.Label>
+              {editQuote.quoteNotes.map((note, index) => (
+                <div key={index} className="mb-2">
+                  <Form.Control
+                    type="text"
+                    placeholder="Notu girin"
+                    value={note.text}
+                    onChange={(e) => {
+                      const updatedNotes = [...editQuote.quoteNotes];
+                      updatedNotes[index].text = e.target.value;
+                      setEditQuote({ ...editQuote, quoteNotes: updatedNotes });
+                    }}
+                  />
+                </div>
+              ))}
+              <Button
+                variant="outline-secondary"
+                onClick={() => setEditQuote({
+                  ...editQuote,
+                  quoteNotes: [...editQuote.quoteNotes, { text: '' }]
+                })}
+              >
+                Not Ekle
+              </Button>
+            </Form.Group>
+            <Form.Group controlId="formTags">
+              <Form.Label>Tag'ler</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Tag'leri girin (virgül ile ayırın)"
+                value={editQuote.tags.join(', ')}
+                onChange={(e) => setEditQuote({ ...editQuote, tags: e.target.value.split(',').map(tag => tag.trim()) })}
+              />
+            </Form.Group>
+            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+          </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseEditModal}>Kapat</Button>
@@ -303,11 +321,11 @@ const Quotes = ({ book }) => {
           <Modal.Title>Alıntıyı Sil</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Bu alıntıyı silmek istediğinizden emin misiniz?</p>
+          <p>Bu alıntıyı silmek istediğinize emin misiniz?</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseDeleteModal}>Hayır</Button>
-          <Button variant="danger" onClick={handleDeleteQuote}>Evet</Button>
+          <Button variant="danger" onClick={handleDeleteQuote}>Evet, Sil</Button>
         </Modal.Footer>
       </Modal>
 
@@ -316,11 +334,11 @@ const Quotes = ({ book }) => {
           <Modal.Title>Notu Sil</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Bu notu silmek istediğinizden emin misiniz?</p>
+          <p>Bu notu silmek istediğinize emin misiniz?</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseDeleteNoteModal}>Hayır</Button>
-          <Button variant="danger" onClick={handleDeleteNote}>Evet</Button>
+          <Button variant="danger" onClick={handleDeleteNote}>Evet, Sil</Button>
         </Modal.Footer>
       </Modal>
     </Container>

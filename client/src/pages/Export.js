@@ -5,6 +5,10 @@ import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts'; 
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const Export = ({ bookId }) => {
   const [quotes, setQuotes] = useState([]);
@@ -17,10 +21,8 @@ const Export = ({ bookId }) => {
   const [selectAllNotes, setSelectAllNotes] = useState(false);
 
   useEffect(() => {
-    // Alıntıları ve notları fetch etme
     axios.get(`http://localhost:5000/api/quote/${bookId}/quotes`)
       .then(response => {
-        // Alıntıları pageNo'ya göre sıralama
         const sortedQuotes = response.data.quotes.sort((a, b) => a.pageNo - b.pageNo);
         setQuotes(sortedQuotes);
       })
@@ -30,7 +32,6 @@ const Export = ({ bookId }) => {
 
     axios.get(`http://localhost:5000/api/note/${bookId}`)
       .then(response => {
-        // Notları pageNo'ya göre sıralama
         const sortedNotes = response.data.notes.sort((a, b) => a.pageNo - b.pageNo);
         setNotes(sortedNotes);
       })
@@ -39,125 +40,112 @@ const Export = ({ bookId }) => {
       });
   }, [bookId]);
 
-  // Metin temizleme fonksiyonu
   const cleanText = (text) => {
-    return text ? text.replace(/\s+/g, ' ').trim() : 'Metin bulunamadı'; // Boş metin durumunda varsayılan değer
+    return text ? text.replace(/\s+/g, ' ').trim() : 'Metin bulunamadı'; 
   };
 
-  // Alıntıları PDF olarak dışa aktarma
+  
+  
   const exportQuotesToPDF = () => {
-    const doc = new jsPDF();
-    doc.setFont('Helvetica');
-    doc.setFontSize(12);
-
-    let y = 10;
-    const lineHeight = 10;
-    const pageHeight = doc.internal.pageSize.height;
-
-    selectedQuotes.forEach((quoteId) => {
-      const quote = quotes.find(q => q._id === quoteId);
-      if (quote) {
-        const cleanedText = cleanText(quote.text);
-        const text = `Sayfa ${quote.pageNo || 'N/A'}: ${cleanedText}`;
-
-        const lines = doc.splitTextToSize(text, 180);
-
-        lines.forEach(line => {
-          if (y + lineHeight > pageHeight - 20) {
-            doc.addPage();
-            y = 10;
-          }
-
-          doc.text(line, 10, y);
-          y += lineHeight;
-        });
-
-        if (quote.quoteNotes && quote.quoteNotes.length > 0) {
-          quote.quoteNotes.forEach(note => {
-            const noteText = cleanText(note.text);
-            const noteLine = `  - ${noteText}`;
-
-            const noteLines = doc.splitTextToSize(noteLine, 180);
-
-            noteLines.forEach(line => {
-              if (y + lineHeight > pageHeight - 20) {
-                doc.addPage();
-                y = 10;
-              }
-
-              doc.text(line, 15, y);
-              y += lineHeight;
+    const margin = 15;
+    const lineHeight = 14;
+  
+    const docDefinition = {
+      content: selectedQuotes.map(quoteId => {
+        const quote = quotes.find(q => q._id === quoteId);
+        if (quote) {
+          const cleanedText = cleanText(quote.text);
+          const text = `Sayfa ${quote.pageNo || 'N/A'}: ${cleanedText}`;
+  
+          const content = [
+            { text, margin: [margin, 0, margin, 0], fontSize: 12, style: 'quoteText' }
+          ];
+  
+          if (quote.quoteNotes && quote.quoteNotes.length > 0) {
+            quote.quoteNotes.forEach(note => {
+              const noteText = cleanText(note.text);
+              content.push({ text: `  - ${noteText}`, margin: [margin + 5, 0, margin, 0], fontSize: 12, style: 'noteText' });
             });
-          });
-        }
-      }
-    });
-
-    doc.save('quotes.pdf');
-  };
-
-  // Alıntıları Word olarak dışa aktarma
-  const exportQuotesToWord = () => {
-    const doc = new Document({
-      sections: [{
-        properties: {},
-        children: selectedQuotes.flatMap(quoteId => {
-          const quote = quotes.find(q => q._id === quoteId);
-          return quote ? [
-            new Paragraph({
-              text: `Sayfa ${quote.pageNo || 'N/A'}: ${quote.text}`,
-              spacing: { before: 200, after: 200 }, // Satır aralığını artırma
-            }),
-            ...quote.quoteNotes.map(note => new Paragraph({
-              text: `  - ${note.text}`,
-              spacing: { before: 200, after: 200 }, // Satır aralığını artırma
-            })),
-          ] : [];
-        }),
-      }],
-    });
-
-    Packer.toBlob(doc).then(blob => {
-      saveAs(blob, 'quotes.docx');
-    }).catch(error => {
-      console.error('Error exporting quotes to Word:', error);
-    });
-  };
-
-  // Notları PDF olarak dışa aktarma
-  const exportNotesToPDF = () => {
-    const doc = new jsPDF();
-    doc.setFont('Helvetica');
-    doc.setFontSize(12);
-
-    let y = 10;
-    const lineHeight = 10;
-    const pageHeight = doc.internal.pageSize.height;
-
-    selectedNotes.forEach((noteId) => {
-      const note = notes.find(n => n._id === noteId);
-      if (note) {
-        const cleanedText = cleanText(note.text);
-        const text = `Sayfa ${note.pageNo || 'N/A'}: ${cleanedText}`;
-
-        const lines = doc.splitTextToSize(text, 180);
-
-        lines.forEach(line => {
-          if (y + lineHeight > pageHeight - 20) {
-            doc.addPage();
-            y = 10;
           }
-
-          doc.text(line, 10, y);
-          y += lineHeight;
-        });
-      }
-    });
-
-    doc.save('notes.pdf');
+  
+          return content;
+        }
+        return [];
+      }).flat(),
+      styles: {
+        quoteText: {
+          margin: [0, 5],
+        },
+        noteText: {
+          margin: [0, 2],
+        }
+      },
+      pageMargins: [margin, margin, margin, margin],
+    };
+  
+    pdfMake.createPdf(docDefinition).download('alintilarim.pdf');
   };
+  
+ 
+  const exportNotesToPDF = () => {
+    const margin = 10;
+    const lineHeight = 14;
+  
+    const docDefinition = {
+      content: selectedNotes.map(noteId => {
+        const note = notes.find(n => n._id === noteId);
+        if (note) {
+          const cleanedText = cleanText(note.text);
+          const text = `Sayfa ${note.pageNo || 'N/A'}: ${cleanedText}`;
+  
+          return {
+            text,
+            margin: [margin, 5, margin, 5],
+            fontSize: 12,
+            style: 'noteText',
+          };
+        }
+        return {};
+      }),
+      styles: {
+        noteText: {
+          margin: [0, 5],
+        }
+      },
+      pageMargins: [margin, margin, margin, margin],
+    };
+  
+    pdfMake.createPdf(docDefinition).download('notlarim.pdf');
+  };
+  
 
-  // Notları Word olarak dışa aktarma
+const exportQuotesToWord = () => {
+  const doc = new Document({
+    sections: [{
+      properties: {},
+      children: selectedQuotes.flatMap(quoteId => {
+        const quote = quotes.find(q => q._id === quoteId);
+        return quote ? [
+          new Paragraph({
+            text: `Sayfa ${quote.pageNo || 'N/A'}: ${quote.text}`,
+            spacing: { before: 200, after: 200 }, 
+          }),
+          ...quote.quoteNotes.map(note => new Paragraph({
+            text: `  - ${note.text}`,
+            spacing: { before: 200, after: 200 }, 
+          })),
+        ] : [];
+      }),
+    }],
+  });
+
+  Packer.toBlob(doc).then(blob => {
+    saveAs(blob, 'quotes.docx');
+  }).catch(error => {
+    console.error('Error exporting quotes to Word:', error);
+  });
+};
+
   const exportNotesToWord = () => {
     const doc = new Document({
       sections: [{
@@ -166,7 +154,7 @@ const Export = ({ bookId }) => {
           const note = notes.find(n => n._id === noteId);
           return note ? new Paragraph({
             text: `Sayfa ${note.pageNo || 'N/A'}: ${note.text}`,
-            spacing: { before: 200, after: 200 }, // Satır aralığını artırma
+            spacing: { before: 200, after: 200 }, 
           }) : null;
         }).filter(Boolean),
       }],
@@ -179,11 +167,9 @@ const Export = ({ bookId }) => {
     });
   };
 
-  // Modalları açma/kapatma işlemleri
   const handleQuotesModal = () => setShowQuotesModal(!showQuotesModal);
   const handleNotesModal = () => setShowNotesModal(!showNotesModal);
 
-  // Alıntı seçimini değiştirme
   const handleQuoteSelect = (quoteId) => {
     setSelectedQuotes(prevSelected => 
       prevSelected.includes(quoteId)
@@ -192,7 +178,6 @@ const Export = ({ bookId }) => {
     );
   };
 
-  // Not seçimini değiştirme
   const handleNoteSelect = (noteId) => {
     setSelectedNotes(prevSelected => 
       prevSelected.includes(noteId)
@@ -201,7 +186,6 @@ const Export = ({ bookId }) => {
     );
   };
 
-  // Tüm alıntıları seçme/çıkarma
   const handleSelectAllQuotes = () => {
     setSelectAllQuotes(!selectAllQuotes);
     if (!selectAllQuotes) {
@@ -211,7 +195,6 @@ const Export = ({ bookId }) => {
     }
   };
 
-  // Tüm notları seçme/çıkarma
   const handleSelectAllNotes = () => {
     setSelectAllNotes(!selectAllNotes);
     if (!selectAllNotes) {

@@ -155,10 +155,10 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
         </Form.Group>
 
         <Form.Group controlId="tags">
-          <Form.Label>Tag'ler (virgül ile ayırın)</Form.Label>
+          <Form.Label>Tagler (virgül ile ayırarak yazın)</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Tag'leri virgülle ayırın"
+            placeholder="Tagler"
             onChange={handleTagsChange}
           />
         </Form.Group>

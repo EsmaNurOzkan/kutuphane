@@ -4,8 +4,9 @@ import CameraPhoto, { FACING_MODES } from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Spinner from 'react-bootstrap/Spinner'; 
-import WhiteCover from '../utils/whitecover2.jpg'; 
+import Spinner from 'react-bootstrap/Spinner';
+import WhiteCover from '../utils/whitecover2.jpg';
+import { Button, Card, Container, Form, Row, Col } from 'react-bootstrap';
 
 const AddBook = () => {
   const navigate = useNavigate();
@@ -18,8 +19,8 @@ const AddBook = () => {
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); 
-  const [isImageUploading, setIsImageUploading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
+  const [isImageUploading, setIsImageUploading] = useState(false);
 
   const handleTakePhoto = (dataUri) => {
     const byteString = atob(dataUri.split(',')[1]);
@@ -42,9 +43,9 @@ const AddBook = () => {
 
   const handleSaveBook = async () => {
     try {
-      setIsImageUploading(true); 
-      let coverImagePath = WhiteCover; 
-      
+      setIsImageUploading(true);
+      let coverImagePath = WhiteCover;
+
       if (coverImage) {
         const formData = new FormData();
         formData.append('coverImage', coverImage);
@@ -80,7 +81,7 @@ const AddBook = () => {
     } catch (error) {
       console.error('Error adding book:', error);
     } finally {
-      setIsImageUploading(false); 
+      setIsImageUploading(false);
     }
   };
 
@@ -90,11 +91,11 @@ const AddBook = () => {
       return;
     }
 
-    setIsLoading(true); 
+    setIsLoading(true);
 
     try {
       const response = await axios.get('http://localhost:5000/api/my-library/search-books', {
-        params: { query: searchQuery },
+        params: { query: searchQuery, limit: 20 },
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -103,7 +104,7 @@ const AddBook = () => {
     } catch (error) {
       console.error('Error searching books:', error);
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
@@ -132,93 +133,103 @@ const AddBook = () => {
   };
 
   return (
-    <div className="container my-4">
+    <Container className="my-4">
       {!isManualEntry ? (
         <div className="mb-4">
-          <button className="btn btn-secondary mb-2" onClick={() => handleSelectEntryMode('manual')}>
+          <Button variant="secondary" className="mb-2" onClick={() => handleSelectEntryMode('manual')}>
             Manuel ekle
-          </button>
-          <div className="form-group mb-2">
-            <input
+          </Button>
+          <Form.Group className="mb-2">
+            <Form.Control
               type="text"
-              className="form-control"
               placeholder="Ara"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-          </div>
-          <button className="btn btn-primary mb-4" onClick={handleSearchBooks}>
+          </Form.Group>
+          <Button variant="primary" className="mb-4" onClick={handleSearchBooks}>
             Kitabı ara
-          </button>
+          </Button>
           {isLoading && (
             <div className="text-center">
-              <Spinner animation="border" /> 
+              <Spinner animation="border" />
               <p>Kitaplar yükleniyor...</p>
             </div>
           )}
-          <div>
+          <Row xs={1} md={2} lg={3} className="g-4">
             {searchResults.map((book, index) => (
-              <div className="card mb-3" key={index}>
-                <div className="card-body">
-                  <h4 className="card-title">{book.title}</h4>
-                  <p className="card-text">Yazar: {book.author}</p>
-                  <p className="card-text">Sayfa sayısı: {book.pageCount}</p>
-                  <p className="card-text">ISBN: {book.isbn}</p>
+              <Col key={index}>
+                <Card className="h-100">
                   {book.coverImage && (
-                    <img src={book.coverImage} alt={book.title} className="img-fluid mb-2" style={{ width: '100px', height: '150px' }} />
+                    <Card.Img
+                      variant="top"
+                      src={book.coverImage}
+                      style={{
+                        width: '100%',
+                        height: '300px',
+                        objectFit: 'contain',
+                        borderRadius: '0.25rem', // Optional: to give rounded corners
+                      }}
+                    />
                   )}
-                  <button className="btn btn-success" onClick={() => handleAddSearchResultToLibrary(book)}>
-                    Kitaplığıma ekle
-                  </button>
-                </div>
-              </div>
+                  <Card.Body>
+                    <Card.Title>{book.title}</Card.Title>
+                    <Card.Text>
+                      Yazar: {book.author}
+                      <br />
+                      Sayfa sayısı: {book.pageCount}
+                      <br />
+                      ISBN: {book.isbn}
+                    </Card.Text>
+                    <Button variant="info" size="sm" onClick={() => handleAddSearchResultToLibrary(book)}>
+                      Kitaplığıma ekle
+                    </Button>
+                  </Card.Body>
+                </Card>
+              </Col>
             ))}
-          </div>
+          </Row>
         </div>
       ) : (
-        <div className="card p-4">
-          <h3 className="mb-4">Manuel ekle</h3>
-          <button className="btn btn-secondary mb-4" onClick={() => handleSelectEntryMode('search')}>
+        <Card className="p-4">
+          <Card.Title className="mb-4">Manuel ekle</Card.Title>
+          <Button variant="secondary" className="mb-4" onClick={() => handleSelectEntryMode('search')}>
             Kitap aramaya dön
-          </button>
-          <div className="form-group mb-3">
-            <input
+          </Button>
+          <Form.Group className="mb-3">
+            <Form.Control
               type="text"
-              className="form-control"
               placeholder="Kitap adı"
               value={bookTitle}
               onChange={(e) => setBookTitle(e.target.value)}
             />
-          </div>
-          <div className="form-group mb-3">
-            <input
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Control
               type="text"
-              className="form-control"
               placeholder="Yazar"
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
             />
-          </div>
-          <div className="form-group mb-3">
-            <input
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Control
               type="number"
-              className="form-control"
               placeholder="Sayfa sayısı"
               value={pageCount}
               onChange={(e) => setPageCount(e.target.value)}
             />
-          </div>
-          <div className="form-group mb-3">
-            <input
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Control
               type="text"
-              className="form-control"
               placeholder="ISBN"
               value={isbn}
               onChange={(e) => setIsbn(e.target.value)}
             />
-          </div>
-          <div className="form-group mb-3">
-            <label className="form-label m-2">Kapak resmi</label>
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Kapak resmi</Form.Label>
             {isCameraOpen ? (
               <CameraPhoto
                 onTakePhoto={(dataUri) => handleTakePhoto(dataUri)}
@@ -226,19 +237,19 @@ const AddBook = () => {
               />
             ) : (
               <>
-                <button className="btn btn-info mb-2" onClick={() => setIsCameraOpen(true)}>
+                <Button variant="info" className="mb-2" onClick={() => setIsCameraOpen(true)}>
                   Fotoğraf çek
-                </button>
-                <input type="file" accept="image/*" onChange={handleUploadImage} />
+                </Button>
+                <Form.Control type="file" accept="image/*" onChange={handleUploadImage} />
               </>
             )}
-          </div>
-          <button className="btn btn-primary" onClick={handleSaveBook} disabled={isImageUploading}>
+          </Form.Group>
+          <Button variant="primary" onClick={handleSaveBook} disabled={isImageUploading}>
             Kitabı ekle
-          </button>
-        </div>
+          </Button>
+        </Card>
       )}
-    </div>
+    </Container>
   );
 };
 
