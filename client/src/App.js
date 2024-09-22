@@ -14,6 +14,8 @@ import MyShelve from "./pages/MyShelve";
 import QuickNotes from './pages/QuickNotes';
 import ReportIssue from "./pages/ReportIssue";
 import AddBook from './pages/AddBook';
+import TagSearchForQuotesAndNotes from './pages/TagSearchForQuotes&Notes';
+import TagSearchForBook from './pages/TagSearchForBook';
 import { Helmet } from 'react-helmet';
 import "./App.css"
 
@@ -77,7 +79,7 @@ function App() {
     </Helmet>
       <MyNavbar /> 
          {showExpiredMessage && (
-        <div style={{ margin:"1rem", padding:"0.5 rem", color:"black", opacity:"0.3", display: 'inline-block', justifyContent: 'center', alignItems: 'center' , backgroundColor: 'crimson', color: 'white', textAlign: 'center', width:"auto"}}>
+        <div style={{ margin:"1rem", padding:"0.5 rem", color:"black", opacity:"0.3", display: 'inline-block', justifyContent: 'center', alignItems: 'center' , backgroundColor: 'crimson', textAlign: 'center', width:"auto"}}>
         Oturum süreniz doldu, lütfen tekrar giriş yapın.
       </div> 
       )}
@@ -89,6 +91,8 @@ function App() {
         <Route path="/my-library" element={!!localStorage.getItem('token') ? <MyLibrary /> : <Navigate to="/login" />} />
         <Route path="/add-book" element={!!localStorage.getItem('token') ? <AddBook /> : <Navigate to="/login" />} />
         <Route path="/my-shelve" element={!!localStorage.getItem('token') ? <MyShelve userId={userId} /> : <Navigate to="/login" />} />
+        <Route path="/tag-search" element={!!localStorage.getItem('token') ? <TagSearchForQuotesAndNotes userId={userId} /> : <Navigate to="/login" />} />
+        <Route path="/tag-search-books" element={!!localStorage.getItem('token') ? <TagSearchForBook userId={userId} /> : <Navigate to="/login" />} />
         <Route path="/quick-notes" element={!!localStorage.getItem('token') ? <QuickNotes /> : <Navigate to="/login" />} />
         <Route path="/report-issue" element={!!localStorage.getItem('token') ? <ReportIssue /> : <Navigate to="/login" />} />
         <Route path="*" element={<Navigate to="/home" />} /> 

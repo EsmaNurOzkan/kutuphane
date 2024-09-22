@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Card, Col, Row, Container, Button, ListGroup, Modal, Spinner } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import BookDetails from './BookDetails';
 import Quotes from './Quotes';
 import Notes from './Notes';
@@ -13,7 +14,9 @@ const MyShelve = ({ userId }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [bookToDelete, setBookToDelete] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [showTagModal, setShowTagModal] = useState(false); 
 
+  const navigate = useNavigate(); 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
@@ -54,14 +57,18 @@ const MyShelve = ({ userId }) => {
     setSelectedBook(book);
   };
 
-
   return (
     <Container>
       <div className="d-flex justify-content-between align-items-center my-4">
         <h1>Kitaplığım</h1>
-        <Button onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}>
-          {viewMode === 'grid' ? 'Kitaplarımı Listele' : 'Kapak Resimleriyle Gör'}
-        </Button>
+        <div>
+          <Button onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')} className="me-2">
+            {viewMode === 'grid' ? 'Kitaplarımı Listele' : 'Kapak Resimleriyle Gör'}
+          </Button>
+          <Button variant="info" onClick={() => setShowTagModal(true)}>
+            Tag ile Ara
+          </Button>
+        </div>
       </div>
       
       {loading ? (
@@ -83,7 +90,6 @@ const MyShelve = ({ userId }) => {
                         : book.coverImage) 
                     : 'https://via.placeholder.com/150';
                   return (
-    
                     <Col md={4} lg={3} key={book._id} className="mb-4">
                       <Card className="h-100" onClick={() => handleSelectBook(book)} style={{ cursor: 'pointer' }}>
                         <Card.Img variant="top" src={coverImageUrl} alt={book.title} />
@@ -192,6 +198,27 @@ const MyShelve = ({ userId }) => {
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>İptal</Button>
           <Button variant="danger" onClick={handleDeleteBook}>Sil</Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showTagModal} onHide={() => setShowTagModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Tag ile Ara</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <Button variant="secondary" onClick={() => { 
+            setShowTagModal(false); 
+            navigate('/tag-search-books'); 
+          }}>Kitap Ara</Button>
+          <Button variant="secondary" onClick={() => { 
+            setShowTagModal(false); 
+            navigate('/tag-search'); 
+          }}>
+            Alıntı/Not Ara
+          </Button>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowTagModal(false)}>Kapat</Button>
         </Modal.Footer>
       </Modal>
     </Container>

@@ -39,7 +39,6 @@ const BookDetails = ({ book }) => {
     try {
       const response = await axios.get(`http://localhost:5000/api/my-shelve/books/${book._id}/tags`);
       setTags(response.data.tags); 
-      console.log(response.data.tags); 
     } catch (error) {
       console.error('Error fetching tags:', error);
     }
