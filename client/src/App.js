@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { AppProvider } from './AppContext'; 
 import { jwtDecode } from 'jwt-decode';
@@ -16,8 +17,9 @@ import ReportIssue from "./pages/ReportIssue";
 import AddBook from './pages/AddBook';
 import TagSearchForQuotesAndNotes from './pages/TagSearchForQuotes&Notes';
 import TagSearchForBook from './pages/TagSearchForBook';
+import ViewMode from "./pages/ViewMode";
 import { Helmet } from 'react-helmet';
-import "./App.css"
+import "./style/App.css"
 
 
 axios.interceptors.response.use(
@@ -93,6 +95,7 @@ function App() {
         <Route path="/my-shelve" element={!!localStorage.getItem('token') ? <MyShelve userId={userId} /> : <Navigate to="/login" />} />
         <Route path="/tag-search" element={!!localStorage.getItem('token') ? <TagSearchForQuotesAndNotes userId={userId} /> : <Navigate to="/login" />} />
         <Route path="/tag-search-books" element={!!localStorage.getItem('token') ? <TagSearchForBook userId={userId} /> : <Navigate to="/login" />} />
+        <Route path="/view-mode" element={!!localStorage.getItem('token') ? <ViewMode /> : <Navigate to="/login" />} />
         <Route path="/quick-notes" element={!!localStorage.getItem('token') ? <QuickNotes /> : <Navigate to="/login" />} />
         <Route path="/report-issue" element={!!localStorage.getItem('token') ? <ReportIssue /> : <Navigate to="/login" />} />
         <Route path="*" element={<Navigate to="/home" />} /> 

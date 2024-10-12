@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { Form, Button, Card, Container, Row, Col } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
-import "../../App.css"
+import "../../style/App.css"
 
 function Login() {
   const [email, setEmail] = useState('');

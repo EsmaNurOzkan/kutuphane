@@ -14,9 +14,10 @@ const MyShelve = ({ userId }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [bookToDelete, setBookToDelete] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
-  const [showTagModal, setShowTagModal] = useState(false); 
+  const [showTagModal, setShowTagModal] = useState(false);
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchBooks = async () => {
       try {
@@ -57,6 +58,12 @@ const MyShelve = ({ userId }) => {
     setSelectedBook(book);
   };
 
+  const handleViewMode = () => {
+    if (selectedBook) {
+      navigate('/view-mode', { state: { book: selectedBook } });
+    }
+  };
+
   return (
     <Container>
       <div className="d-flex justify-content-between align-items-center my-4">
@@ -70,7 +77,7 @@ const MyShelve = ({ userId }) => {
           </Button>
         </div>
       </div>
-      
+
       {loading ? (
         <div className="text-center my-5">
           <Spinner animation="border" role="status" />
@@ -159,27 +166,28 @@ const MyShelve = ({ userId }) => {
         <Modal show={true} onHide={() => setSelectedBook(null)} size="lg">
           <Modal.Header closeButton>
             <Modal.Title>{selectedBook.title}</Modal.Title>
+            <Button variant="primary" className="ml-auto" onClick={handleViewMode}>
+              Okuma Modu
+            </Button>
           </Modal.Header>
           <Modal.Body>
-          <Row>
-          <Row>
-          <Col md={6} className="d-flex flex-column justify-content-center align-items-center">
-          <BookDetails book={selectedBook} />
-        </Col>
-        <Col md={6} className="d-flex flex-column justify-content-center align-items-center">
-      <Row className="w-100 mb-2">
-        <Col className="d-flex justify-content-center">
-          <Quotes book={selectedBook} />
-        </Col>
-      </Row>
-      <Row className="w-100">
-        <Col className="d-flex justify-content-center">
-          <Notes book={selectedBook} />
-        </Col>
-      </Row>
-    </Col>
-      </Row>
-          </Row>
+            <Row>
+              <Col md={6} className="d-flex flex-column justify-content-center align-items-center">
+                <BookDetails book={selectedBook} />
+              </Col>
+              <Col md={6} className="d-flex flex-column justify-content-center align-items-center">
+                <Row className="w-100 mb-2">
+                  <Col className="d-flex justify-content-center">
+                    <Quotes book={selectedBook} />
+                  </Col>
+                </Row>
+                <Row className="w-100">
+                  <Col className="d-flex justify-content-center">
+                    <Notes book={selectedBook} />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={() => setSelectedBook(null)}>Kapat</Button>
@@ -206,15 +214,15 @@ const MyShelve = ({ userId }) => {
           <Modal.Title>Tag ile Ara</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        <Button variant="secondary" onClick={() => { 
-            setShowTagModal(false); 
-            navigate('/tag-search-books'); 
-          }}>Kitap Ara</Button>
           <Button variant="secondary" onClick={() => { 
-            setShowTagModal(false); 
-            navigate('/tag-search'); 
-          }}>
-            Alıntı/Not Ara
+              setShowTagModal(false); 
+              navigate('/tag-search-books'); 
+            }}>Kitap Ara</Button>
+          <Button variant="secondary" onClick={() => { 
+              setShowTagModal(false); 
+              navigate('/tag-search'); 
+            }}>
+              Alıntı/Not Ara
           </Button>
         </Modal.Body>
         <Modal.Footer>

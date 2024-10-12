@@ -17,7 +17,7 @@ const Quotes = ({ book }) => {
   const [showDeleteNoteModal, setShowDeleteNoteModal] = useState(false);
   const [noteToDelete, setNoteToDelete] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false); 
 
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const Quotes = ({ book }) => {
     if (book && book._id) {
       fetchQuotes();
     }
-  }, [book, quotesUpdated]);
+  }, [book._id, quotesUpdated]);
 
   const handleShowDetailsModal = (quote) => {
     setSelectedQuote(quote);
