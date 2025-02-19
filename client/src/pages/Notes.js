@@ -3,6 +3,9 @@ import { Card, Spinner, Alert, Container, Modal, Button, Form } from 'react-boot
 import axios from 'axios';
 import { AppContext } from '../AppContext';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
+
+
 const Notes = ({ book }) => {
   const { notesUpdated, setNotesUpdated } = useContext(AppContext); // useContext ile alın
   const [notes, setNotes] = useState([]);
@@ -21,7 +24,7 @@ const Notes = ({ book }) => {
     const fetchNotes = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:5000/api/note/${book._id}`);
+        const response = await axios.get(`${BACKEND_URL}/api/note/${book._id}`);
         setNotes(response.data.notes);
         setLoading(false);
       } catch (err) {
@@ -35,7 +38,7 @@ const Notes = ({ book }) => {
 
   const updateNote = async () => {
     try {
-      const response = await axios.patch(`http://localhost:5000/api/note/${book._id}/${selectedNote._id}`, {
+      const response = await axios.patch(`${BACKEND_URL}/api/note/${book._id}/${selectedNote._id}`, {
         bookId: book._id,
         text: editText,
         pageNo: editPageNo,
@@ -54,7 +57,7 @@ const Notes = ({ book }) => {
 
   const deleteNote = async (noteId) => {
     try {
-      const response = await axios.delete(`http://localhost:5000/api/note/${book._id}/${noteId}`);
+      const response = await axios.delete(`${BACKEND_URL}/api/note/${book._id}/${noteId}`);
       setNotes(response.data.notes);
       setDeleteSuccessMessage('Not başarıyla silindi!');
       setNotesUpdated(prev => !prev); 

@@ -7,6 +7,7 @@ import AddTag from "./AddTag";
 import axios from 'axios'; 
 import { AppContext } from '../AppContext';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
 
 const BookDetails = ({ book }) => {
   const { notesUpdated, setNotesUpdated } = useContext(AppContext); 
@@ -37,7 +38,7 @@ const BookDetails = ({ book }) => {
 
   const fetchTags = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/my-shelve/books/${book._id}/tags`);
+      const response = await axios.get(`${BACKEND_URL}/api/my-shelve/books/${book._id}/tags`);
       setTags(response.data.tags); 
     } catch (error) {
       console.error('Error fetching tags:', error);
@@ -46,7 +47,7 @@ const BookDetails = ({ book }) => {
 
   const fetchUpdatedBook = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/my-shelve/books/${book._id}/details`);
+      const response = await axios.get(`${BACKEND_URL}/api/my-shelve/books/${book._id}/details`);
       setNotesCount(response.data.notes.length);
       setQuotesCount(response.data.quotes.length);
     } catch (error) {
@@ -73,7 +74,7 @@ const BookDetails = ({ book }) => {
 
   const handleDeleteTag = async () => {
     try {
-      await axios.delete(`http://localhost:5000/api/my-shelve/books/${book._id}/tags`, {
+      await axios.delete(`${BACKEND_URL}/api/my-shelve/books/${book._id}/tags`, {
         data: { tagId: selectedTag._id } 
       });
       setTags(tags.filter(tag => tag._id !== selectedTag._id));
@@ -87,7 +88,7 @@ const BookDetails = ({ book }) => {
 
   const coverImageUrl = book.coverImage 
     ? (book.coverImage.startsWith('uploads') 
-        ? `http://localhost:5000/${book.coverImage}` 
+        ? `${BACKEND_URL}/${book.coverImage}` 
         : book.coverImage) 
     : 'https://via.placeholder.com/150';
 

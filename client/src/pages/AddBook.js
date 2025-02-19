@@ -8,6 +8,8 @@ import Spinner from 'react-bootstrap/Spinner';
 import WhiteCover from '../utils/whitecover2.jpg';
 import { Button, Card, Container, Form, Row, Col } from 'react-bootstrap';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
+
 const AddBook = () => {
   const navigate = useNavigate();
   const [isManualEntry, setIsManualEntry] = useState(false);
@@ -52,7 +54,7 @@ const AddBook = () => {
 
         const token = localStorage.getItem('token');
 
-        const uploadResponse = await axios.post('http://localhost:5000/api/my-library/upload-cover-image', formData, {
+        const uploadResponse = await axios.post(`${BACKEND_URL}/api/my-library/upload-cover-image`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             'Authorization': `Bearer ${token}`,
@@ -70,7 +72,7 @@ const AddBook = () => {
         coverImage: coverImagePath,
       };
 
-      await axios.post('http://localhost:5000/api/my-library/add-book', bookData, {
+      await axios.post(`${BACKEND_URL}/api/my-library/add-book`, bookData, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -94,7 +96,7 @@ const AddBook = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.get('http://localhost:5000/api/my-library/search-books', {
+      const response = await axios.get(`${BACKEND_URL}/api/my-library/search-books`, {
         params: { query: searchQuery, limit: 20 },
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -112,7 +114,7 @@ const AddBook = () => {
     try {
       const token = localStorage.getItem('token');
 
-      await axios.post('http://localhost:5000/api/my-library/add-book', book, {
+      await axios.post(`${BACKEND_URL}/api/my-library/add-book`, book, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

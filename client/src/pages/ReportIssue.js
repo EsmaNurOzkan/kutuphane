@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
+
 const ReportIssue = () => {
   const [formData, setFormData] = useState({
     firstName: '',
@@ -29,7 +31,7 @@ const ReportIssue = () => {
       
       const token = localStorage.getItem('token');
 
-      const res = await axios.post('http://localhost:5000/api/report-issue', formData, {
+      const res = await axios.post(`${BACKEND_URL}/api/report-issue`, formData, {
         headers: {
             'Authorization': `Bearer ${token}`,
           }

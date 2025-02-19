@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Alert, Spinner } from 'react-bootstrap';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
+
 function ResetPassword() {
   const [email, setEmail] = useState('');
   const [resetCode, setResetCode] = useState('');
@@ -24,7 +26,7 @@ function ResetPassword() {
     }
 
     try {
-      await axios.post('http://localhost:5000/api/auth/sendresetlink', { email });
+      await axios.post(`${BACKEND_URL}/api/auth/sendresetlink`, { email });
       setMessage('4 haneli kod e-posta adresinize gönderildi');
       setStep(2);
     } catch (error) {
@@ -39,7 +41,7 @@ function ResetPassword() {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/verifycode', { email, resetCode });
+      const response = await axios.post(`${BACKEND_URL}/api/auth/verifycode`, { email, resetCode });
       if (response.data.success) {
         setMessage('Kod doğrulandı. Şimdi yeni şifrenizi oluşturabilirsiniz.');
         setStep(3);
@@ -70,7 +72,7 @@ function ResetPassword() {
     }
 
     try {
-      await axios.post('http://localhost:5000/api/auth/resetpassword', { email, resetCode, newPassword });
+      await axios.post(`${BACKEND_URL}/api/auth/resetpassword`, { email, resetCode, newPassword });
       setMessage('Şifre başarıyla sıfırlandı');
       setTimeout(() => navigate('/login'), 2000);
     } catch (error) {

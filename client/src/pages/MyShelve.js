@@ -6,6 +6,9 @@ import BookDetails from './BookDetails';
 import Quotes from './Quotes';
 import Notes from './Notes';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
+
+
 const MyShelve = ({ userId }) => {
   const [books, setBooks] = useState([]);
   const [viewMode, setViewMode] = useState('grid');
@@ -21,7 +24,7 @@ const MyShelve = ({ userId }) => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/my-shelve/user/${userId}`);
+        const response = await axios.get(`${BACKEND_URL}/api/my-shelve/user/${userId}`);
         setBooks(response.data);
       } catch (error) {
         console.error('Error fetching books:', error);
@@ -40,7 +43,7 @@ const MyShelve = ({ userId }) => {
     if (!bookToDelete) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/my-shelve/book/${bookToDelete}`, {
+      await axios.delete(`${BACKEND_URL}/api/my-shelve/book/${bookToDelete}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -93,7 +96,7 @@ const MyShelve = ({ userId }) => {
                 books.map((book) => {
                   const coverImageUrl = book.coverImage 
                     ? (book.coverImage.startsWith('uploads') 
-                        ? `http://localhost:5000/${book.coverImage}` 
+                        ? `${BACKEND_URL}/${book.coverImage}` 
                         : book.coverImage) 
                     : 'https://via.placeholder.com/150';
                   return (

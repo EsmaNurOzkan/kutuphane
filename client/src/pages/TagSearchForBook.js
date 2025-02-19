@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Container, Row, Col, Badge, Button, Form, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
+
 const TagSearchForBook = ({ userId }) => {
     const [tags, setTags] = useState([]); // Tüm tagler
     const [selectedTags, setSelectedTags] = useState([]); // Seçili tagler
@@ -16,7 +18,7 @@ const TagSearchForBook = ({ userId }) => {
         if (!userId) return;
   
         try {
-          const res = await axios.get(`http://localhost:5000/api/my-shelve/user/${userId}`);
+          const res = await axios.get(`${BACKEND_URL}/api/my-shelve/user/${userId}`);
           const books = res.data;
           let allTags = [];
   
@@ -74,7 +76,7 @@ const TagSearchForBook = ({ userId }) => {
     const getBookCoverUrl = (book) => {
       return book.coverImage 
         ? (book.coverImage.startsWith('uploads') 
-          ? `http://localhost:5000/${book.coverImage}` 
+          ? `${BACKEND_URL}/${book.coverImage}` 
           : book.coverImage) 
         : 'https://via.placeholder.com/150';
     };

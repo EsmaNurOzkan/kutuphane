@@ -4,6 +4,8 @@ import { Form, Button, Alert, Modal } from 'react-bootstrap';
 import Ocr from './Ocr'; 
 import { AppContext } from '../AppContext';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
+
 
 const AddQuote = ({ bookId, pageCount, onSuccess }) => {
   const { quotesUpdated, setQuotesUpdated } = useContext(AppContext); 
@@ -90,7 +92,7 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
         tags, 
       };
 
-      await axios.post('http://localhost:5000/api/quote/add', dataToSend);
+      await axios.post(`${BACKEND_URL}/api/quote/add`, dataToSend);
       setSuccess('Alıntı başarıyla eklendi.');
       setError('');
 

@@ -4,6 +4,8 @@ import { Container, Form, Button, Alert, Modal } from 'react-bootstrap';
 import Ocr from './Ocr';
 import { AppContext } from '../AppContext';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
+
 const AddNote = ({ bookId, pageCount, onSuccess }) => {
   const { notesUpdated, setNotesUpdated } = useContext(AppContext); 
   const [text, setText] = useState('');
@@ -31,7 +33,7 @@ const AddNote = ({ bookId, pageCount, onSuccess }) => {
     try {
       const tagsArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
 
-      const response = await axios.post('http://localhost:5000/api/note/add', {
+      const response = await axios.post(`${BACKEND_URL}/api/note/add`, {
         bookId,
         text,
         pageNo,

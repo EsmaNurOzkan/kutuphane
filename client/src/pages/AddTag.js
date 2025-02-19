@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Form, Button, Alert, ListGroup, Container, Row, Col } from 'react-bootstrap';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
+
 const AddTag = ({ bookId, onSuccess }) => {
   const [tags, setTags] = useState([]); 
   const [tagText, setTagText] = useState('');
@@ -21,7 +23,7 @@ const AddTag = ({ bookId, onSuccess }) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`http://localhost:5000/api/my-shelve/books/${bookId}/tags`, { tags });
+      const response = await axios.post(`${BACKEND_URL}/api/my-shelve/books/${bookId}/tags`, { tags });
 
       if (response.status === 200) {
         setMessage(response.data.message);

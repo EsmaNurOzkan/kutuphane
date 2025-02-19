@@ -5,6 +5,8 @@ import axios from 'axios';
 import { Container, Button, Card, ListGroup, Modal, Form, Alert, Spinner } from 'react-bootstrap';
 import { AppContext } from '../AppContext';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
+
 
 const Quotes = ({ book }) => {
   const { quotesUpdated, setQuotesUpdated } = useContext(AppContext); 
@@ -23,7 +25,7 @@ const Quotes = ({ book }) => {
   useEffect(() => {
     const fetchQuotes = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/quote/${book._id}/quotes`);
+        const response = await axios.get(`${BACKEND_URL}/api/quote/${book._id}/quotes`);
         const allQuotes = response.data.quotes;
 
         const nonNumericPageQuotes = allQuotes.filter(quote => isNaN(quote.pageNo));
@@ -74,7 +76,7 @@ const Quotes = ({ book }) => {
     }
 
     try {
-      const response = await axios.patch('http://localhost:5000/api/quote/update', {
+      const response = await axios.patch(`${BACKEND_URL}/api/quote/update`, {
         bookId: book._id,
         quoteId: selectedQuote._id,
         updatedQuote: {
@@ -116,7 +118,7 @@ const Quotes = ({ book }) => {
 
   const handleDeleteQuote = async () => {
     try {
-      const response = await axios.delete('http://localhost:5000/api/quote/delete', {
+      const response = await axios.delete(`${BACKEND_URL}/api/quote/delete`, {
         data: {
           bookId: book._id,
           quoteId: selectedQuote._id
@@ -137,7 +139,7 @@ const Quotes = ({ book }) => {
     if (!noteToDelete) return;
 
     try {
-      const response = await axios.delete('http://localhost:5000/api/quote/delete', {
+      const response = await axios.delete(`${BACKEND_URL}/api/quote/delete`, {
         data: {
           bookId: book._id,
           quoteId: selectedQuote._id,

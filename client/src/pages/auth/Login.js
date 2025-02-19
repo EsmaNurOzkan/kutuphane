@@ -5,6 +5,8 @@ import { Form, Button, Card, Container, Row, Col } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 import "../../style/App.css"
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
+
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,7 +15,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      const response = await axios.post(`${BACKEND_URL}/api/auth/login`, { email, password });
       localStorage.setItem('token', response.data.token);
       navigate('/home');
       window.location.reload();

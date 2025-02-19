@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button, Card, Container, Row, Col, Modal, Spinner } from 'react-bootstrap';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
+
 function Register() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -19,7 +21,7 @@ function Register() {
   const handleSendCode = async () => {
     setLoading(true); 
     try {
-      await axios.post('http://localhost:5000/api/auth/send-code', { email });
+      await axios.post(`${BACKEND_URL}/api/auth/send-code`, { email });
       setShowModal(true);
       setMessage('Kayıt tamamlanması için e-posta adresinize bir doğrulama kodu gönderildi.');
       setCodeSent(true);
@@ -48,7 +50,7 @@ function Register() {
     }
 
     try {
-      await axios.post('http://localhost:5000/api/auth/register', {
+      await axios.post(`${BACKEND_URL}/api/auth/register`, {
         username, email, password, code: verificationCode
       });
       setMessage('Kayıt başarılı.');

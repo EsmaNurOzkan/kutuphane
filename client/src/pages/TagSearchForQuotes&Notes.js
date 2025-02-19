@@ -1,13 +1,10 @@
-//tagler secılı oldugunda gorunmuyor
-//tum taglerın oldugu dıvde de mınık bır arama cubuguyla tag bulma lazım kolay yolda tag secme icin
-//tagleri daha guzel bastır
-//tasarım ıyılestırmesi # ısaretıyle
-//dıger tagsearc bılesenını da ayarla, bookdetaıls tetıklesın.
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; 
 import { Container, Row, Col, Button, Badge, Card, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
 
 const TagSearchForQuotesAndNotes = ({ userId }) => {
   const [tags, setTags] = useState([]); 
@@ -21,7 +18,7 @@ const TagSearchForQuotesAndNotes = ({ userId }) => {
       if (!userId) return; 
 
       try {
-        const res = await axios.get(`http://localhost:5000/api/my-shelve/user/${userId}`);
+        const res = await axios.get(`${BACKEND_URL}/api/my-shelve/user/${userId}`);
         const booksData = res.data;
         setBooks(booksData); 
 
@@ -78,7 +75,7 @@ const TagSearchForQuotesAndNotes = ({ userId }) => {
           bookTitle: book.title,
           bookCoverUrl: book.coverImage 
             ? (book.coverImage.startsWith('uploads') 
-                ? `http://localhost:5000/${book.coverImage}` 
+                ? `${BACKEND_URL}/${book.coverImage}` 
                 : book.coverImage) 
             : 'https://via.placeholder.com/150',
           quotes: matchedQuotes,

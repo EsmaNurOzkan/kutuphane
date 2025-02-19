@@ -8,6 +8,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts'; 
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
+
+
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const Export = ({ bookId }) => {
@@ -21,7 +24,7 @@ const Export = ({ bookId }) => {
   const [selectAllNotes, setSelectAllNotes] = useState(false);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/quote/${bookId}/quotes`)
+    axios.get(`${BACKEND_URL}/api/quote/${bookId}/quotes`)
       .then(response => {
         const sortedQuotes = response.data.quotes.sort((a, b) => a.pageNo - b.pageNo);
         setQuotes(sortedQuotes);
@@ -30,7 +33,7 @@ const Export = ({ bookId }) => {
         console.error('Error fetching quotes:', error);
       });
 
-    axios.get(`http://localhost:5000/api/note/${bookId}`)
+    axios.get(`${BACKEND_URL}/api/note/${bookId}`)
       .then(response => {
         const sortedNotes = response.data.notes.sort((a, b) => a.pageNo - b.pageNo);
         setNotes(sortedNotes);

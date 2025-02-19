@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Container, Form, Button, ListGroup, Alert, Spinner, Modal } from 'react-bootstrap';
 import Ocr from './Ocr';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
+
 function QuickNotes() {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState('');
@@ -18,7 +20,7 @@ function QuickNotes() {
       const token = localStorage.getItem('token');
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:5000/api/quick-notes', {
+        const response = await axios.get(`${BACKEND_URL}/api/quick-notes`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const sortedNotes = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -41,7 +43,7 @@ function QuickNotes() {
     }
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.post('http://localhost:5000/api/quick-notes', { noteContent: newNote }, {
+      const response = await axios.post(`${BACKEND_URL}/api/quick-notes`, { noteContent: newNote }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setNotes([response.data.newNote, ...notes].sort((a, b) => new Date(b.date) - new Date(a.date)));
@@ -55,7 +57,7 @@ function QuickNotes() {
   const handleEditNote = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.put(`http://localhost:5000/api/quick-notes/${selectedNote._id}`,
+      const response = await axios.put(`${BACKEND_URL}/api/quick-notes/${selectedNote._id}`,
         { noteContent: editNote, date: new Date() }, {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -74,7 +76,7 @@ function QuickNotes() {
     if (!confirm) return;
     const token = localStorage.getItem('token');
     try {
-      await axios.delete(`http://localhost:5000/api/quick-notes/${selectedNote._id}`, {
+      await axios.delete(`${BACKEND_URL}/api/quick-notes/${selectedNote._id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setNotes(notes.filter(note => note._id !== selectedNote._id).sort((a, b) => new Date(b.date) - new Date(a.date)));

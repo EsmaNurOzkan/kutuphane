@@ -5,6 +5,8 @@ import axios from 'axios';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import '../style/ViewMode.css'; 
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
+
 const ViewMode = () => {
   const location = useLocation();
   const { book } = location.state || {};
@@ -15,7 +17,7 @@ const ViewMode = () => {
   const fetchUpdatedBook = useCallback(async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/my-shelve/books/${book._id}/details`
+        `${BACKEND_URL}/api/my-shelve/books/${book._id}/details`
       );
       const updatedBook = response.data;
 
