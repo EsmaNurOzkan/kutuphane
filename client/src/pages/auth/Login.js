@@ -20,6 +20,8 @@ function Login() {
       navigate('/home');
       window.location.reload();
     } catch (error) {
+      console.log("Backend URL:", process.env.REACT_APP_BACKEND_URL);
+
       console.error('Error logging in:', error.response ? error.response.data : error.message);
       alert('Giriş yapılırken bir hata oluştu');
     }
