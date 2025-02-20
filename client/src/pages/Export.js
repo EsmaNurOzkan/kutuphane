@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, ListGroup, Form } from 'react-bootstrap';
-import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
-import { Document, Packer, Paragraph, TextRun } from 'docx';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts'; 
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { Document, Packer, Paragraph } from 'docx';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
-
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -44,15 +42,11 @@ const Export = ({ bookId }) => {
   }, [bookId]);
 
   const cleanText = (text) => {
-    return text ? text.replace(/\s+/g, ' ').trim() : 'Metin bulunamadı'; 
+    return text ? text.replace(/\s+/g, ' ').trim() : 'Metin bulunamadı';
   };
 
-  
-  
   const exportQuotesToPDF = () => {
     const margin = 15;
-    const lineHeight = 14;
-  
     const docDefinition = {
       content: selectedQuotes.map(quoteId => {
         const quote = quotes.find(q => q._id === quoteId);
@@ -85,15 +79,12 @@ const Export = ({ bookId }) => {
       },
       pageMargins: [margin, margin, margin, margin],
     };
-  
+
     pdfMake.createPdf(docDefinition).download('alintilarim.pdf');
   };
-  
- 
+
   const exportNotesToPDF = () => {
     const margin = 10;
-    const lineHeight = 14;
-  
     const docDefinition = {
       content: selectedNotes.map(noteId => {
         const note = notes.find(n => n._id === noteId);
@@ -117,37 +108,36 @@ const Export = ({ bookId }) => {
       },
       pageMargins: [margin, margin, margin, margin],
     };
-  
+
     pdfMake.createPdf(docDefinition).download('notlarim.pdf');
   };
-  
 
-const exportQuotesToWord = () => {
-  const doc = new Document({
-    sections: [{
-      properties: {},
-      children: selectedQuotes.flatMap(quoteId => {
-        const quote = quotes.find(q => q._id === quoteId);
-        return quote ? [
-          new Paragraph({
-            text: `Sayfa ${quote.pageNo || 'N/A'}: ${quote.text}`,
-            spacing: { before: 200, after: 200 }, 
-          }),
-          ...quote.quoteNotes.map(note => new Paragraph({
-            text: `  - ${note.text}`,
-            spacing: { before: 200, after: 200 }, 
-          })),
-        ] : [];
-      }),
-    }],
-  });
+  const exportQuotesToWord = () => {
+    const doc = new Document({
+      sections: [{
+        properties: {},
+        children: selectedQuotes.flatMap(quoteId => {
+          const quote = quotes.find(q => q._id === quoteId);
+          return quote ? [
+            new Paragraph({
+              text: `Sayfa ${quote.pageNo || 'N/A'}: ${quote.text}`,
+              spacing: { before: 200, after: 200 },
+            }),
+            ...quote.quoteNotes.map(note => new Paragraph({
+              text: `  - ${note.text}`,
+              spacing: { before: 200, after: 200 },
+            })),
+          ] : [];
+        }),
+      }],
+    });
 
-  Packer.toBlob(doc).then(blob => {
-    saveAs(blob, 'quotes.docx');
-  }).catch(error => {
-    console.error('Error exporting quotes to Word:', error);
-  });
-};
+    Packer.toBlob(doc).then(blob => {
+      saveAs(blob, 'quotes.docx');
+    }).catch(error => {
+      console.error('Error exporting quotes to Word:', error);
+    });
+  };
 
   const exportNotesToWord = () => {
     const doc = new Document({
@@ -157,7 +147,7 @@ const exportQuotesToWord = () => {
           const note = notes.find(n => n._id === noteId);
           return note ? new Paragraph({
             text: `Sayfa ${note.pageNo || 'N/A'}: ${note.text}`,
-            spacing: { before: 200, after: 200 }, 
+            spacing: { before: 200, after: 200 },
           }) : null;
         }).filter(Boolean),
       }],
@@ -213,7 +203,7 @@ const exportQuotesToWord = () => {
       <Button variant="primary" onClick={handleQuotesModal}>Alıntıları Dışa Aktar</Button>{' '}
       <Button variant="primary" onClick={handleNotesModal}>Notları Dışa Aktar</Button>{' '}
       <Button variant="primary">Alıntı & Notları Dışa Aktar</Button>
-      
+
       <Modal show={showQuotesModal} size="lg" onHide={handleQuotesModal}>
         <Modal.Header closeButton>
           <Modal.Title>Alıntıları Dışa Aktar</Modal.Title>
@@ -241,7 +231,7 @@ const exportQuotesToWord = () => {
           <Button variant="primary" onClick={exportQuotesToWord}>Word Olarak Dışa Aktar</Button>
         </Modal.Footer>
       </Modal>
-      
+
       <Modal show={showNotesModal} size="lg" onHide={handleNotesModal}>
         <Modal.Header closeButton>
           <Modal.Title>Notları Dışa Aktar</Modal.Title>
