@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap'; // React-Bootstrap bileşenleri
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function MyNavbar() {

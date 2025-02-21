@@ -7,7 +7,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 
 const Notes = ({ book }) => {
-  const { notesUpdated, setNotesUpdated } = useContext(AppContext); // useContext ile alın
+  const { notesUpdated, setNotesUpdated } = useContext(AppContext); 
   const [notes, setNotes] = useState([]);
   const [selectedNote, setSelectedNote] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);

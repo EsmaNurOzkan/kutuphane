@@ -38,13 +38,13 @@ function Login() {
         <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet" />
       </Helmet>
-      <Container className="d-flex align-items-center justify-content-center " style={{ minHeight: '100vh' }}>
+      <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh' }}>
         <Row className="w-100">
           <Col sm={12} md={8} lg={6} className="mx-auto">
-            <Card className="border-0 shadow-lg bg-body" style={{ borderRadius: '3rem' }}>
+            <Card className="border-0 shadow-lg bg-body" style={{ borderRadius: '3rem', padding: '2rem' }}>
               <Card.Body>
                 <h3 className="text-center mb-4" style={{ fontFamily: 'DM Serif Text, serif' }}>Giriş Yap</h3>
-                <Form onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit} className="d-flex flex-column">
                   <Form.Group id="email">
                     <Form.Label style={{ fontFamily: "Cormorant, serif", fontWeight: 600 }}>E-posta</Form.Label>
                     <Form.Control
@@ -67,23 +67,27 @@ function Login() {
                       required
                     />
                   </Form.Group>
-                  <Button style={{ fontFamily: "Cormorant, serif", fontWeight: 500 }} type="submit" className="w-100 mt-4" disabled={loading}>
-                    {loading ? (
-                      <>
-                        <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
-                        {' '}Giriş yapılıyor...
-                      </>
-                    ) : (
-                      'Giriş Yap'
-                    )}
-                  </Button>
+                  <div className="d-flex justify-content-center">
+                    <Button style={{ fontFamily: "Cormorant, serif", fontWeight: 500 }} type="submit" className="w-75 mt-4" disabled={loading}>
+                      {loading ? (
+                        <>
+                          <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                          {' '}Giriş yapılıyor...
+                        </>
+                      ) : (
+                        'Giriş Yap'
+                      )}
+                    </Button>
+                  </div>
                 </Form>
-                <Link to="/reset-password" style={{ fontFamily: "Cormorant, serif", fontWeight: 500 }} className="w-100 mt-3 d-block text-center">
-                  <a className="link-primary">Şifremi unuttum</a>
-                </Link>
-                <Link to="/register" style={{ fontFamily: "Cormorant, serif", fontWeight: 500 }} className="w-100 mt-1 d-block text-center">
-                  <a className='link-secondary'>Kayıt Ol</a>
-                </Link>
+                <div className="text-center mt-3">
+                  <Link to="/reset-password" style={{ fontFamily: "Cormorant, serif", fontWeight: 500 }} className="d-block link-primary">
+                    Şifremi unuttum
+                  </Link>
+                  <Link to="/register" style={{ fontFamily: "Cormorant, serif", fontWeight: 500 }} className="d-block link-secondary mt-1">
+                    Kayıt Ol
+                  </Link>
+                </div>
               </Card.Body>
             </Card>
           </Col>

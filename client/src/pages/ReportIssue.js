@@ -50,65 +50,70 @@ const ReportIssue = () => {
 
   return (
     <div className="container mt-5">
-      <h2 className="text-center mb-4">Şikayet/Öneri Bildir</h2>
-      <form onSubmit={handleSubmit} className="needs-validation" noValidate>
-        <div className="mb-3">
-          <label htmlFor="firstName" className="form-label">İsim</label>
-          <input
-            type="text"
-            className="form-control"
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-          />
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <h2 className="text-center mb-4">Şikayet/Öneri Bildir</h2>
+          <form onSubmit={handleSubmit} className="needs-validation" noValidate>
+            <div className="mb-3">
+              <label htmlFor="firstName" className="form-label">İsim</label>
+              <input
+                type="text"
+                className="form-control"
+                id="firstName"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="lastName" className="form-label">Soyisim</label>
+              <input
+                type="text"
+                className="form-control"
+                id="lastName"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">Email</label>
+              <input
+                type="email"
+                className="form-control"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="message" className="form-label">Şikayet/Öneri</label>
+              <textarea
+                className="form-control"
+                id="message"
+                name="message"
+                rows="4"
+                value={formData.message}
+                onChange={handleChange}
+                required
+              ></textarea>
+            </div>
+            <button type="submit" className="btn btn-primary mx-auto d-block">Gönder</button>
+          </form>
+          {responseMessage && (
+            <div className="alert alert-info mt-3 text-center" role="alert">
+              {responseMessage}
+            </div>
+          )}
         </div>
-        <div className="mb-3">
-          <label htmlFor="lastName" className="form-label">Soyisim</label>
-          <input
-            type="text"
-            className="form-control"
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">Email</label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="message" className="form-label">Şikayet/Öneri</label>
-          <textarea
-            className="form-control"
-            id="message"
-            name="message"
-            rows="4"
-            value={formData.message}
-            onChange={handleChange}
-            required
-          ></textarea>
-        </div>
-        <button type="submit" className="btn btn-primary w-100">Gönder</button>
-      </form>
-      {responseMessage && (
-        <div className="alert alert-info mt-3 text-center" role="alert">
-          {responseMessage}
-        </div>
-      )}
+      </div>
     </div>
   );
+  
 };
 
 export default ReportIssue;

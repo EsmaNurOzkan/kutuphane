@@ -1,6 +1,6 @@
 .fade-enter {
   opacity: 0;
-  transform: translateY(20px); /* Yukarıdan yumuşak iniş */
+  transform: translateY(20px); 
 }
 .fade-enter-active {
   opacity: 1;
@@ -12,7 +12,7 @@
 }
 .fade-exit-active {
   opacity: 0;
-  transform: translateY(-20px); /* Yukarıya kaybolma */
+  transform: translateY(-20px); 
   transition: opacity 400ms ease-in-out, transform 400ms ease-in-out;
 }
 

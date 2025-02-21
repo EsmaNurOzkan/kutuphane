@@ -6,12 +6,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
 
 const TagSearchForBook = ({ userId }) => {
-    const [tags, setTags] = useState([]); // Tüm tagler
-    const [selectedTags, setSelectedTags] = useState([]); // Seçili tagler
-    const [searchTerm, setSearchTerm] = useState(''); // Tag arama terimi
-    const [allBooks, setAllBooks] = useState([]); // Tüm kitaplar
-    const [filteredBooks, setFilteredBooks] = useState([]); // Filtrelenmiş kitaplar
-    const [isSearching, setIsSearching] = useState(false); // Arama durumu
+    const [tags, setTags] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]); 
+    const [searchTerm, setSearchTerm] = useState(''); 
+    const [allBooks, setAllBooks] = useState([]);
+    const [filteredBooks, setFilteredBooks] = useState([]); 
+    const [isSearching, setIsSearching] = useState(false); 
   
     useEffect(() => {
       const fetchBooks = async () => {
@@ -22,18 +22,16 @@ const TagSearchForBook = ({ userId }) => {
           const books = res.data;
           let allTags = [];
   
-          // Kitapların taglerini toplama
           books.forEach(book => {
             if (Array.isArray(book.tags)) {
               allTags = [...allTags, ...book.tags.map(tag => tag.text)];
             }
           });
   
-          // Tüm taglerin unique olmasını sağlama
           const uniqueTags = [...new Set(allTags)];
           setTags(uniqueTags);
-          setAllBooks(books); // Tüm kitapları başlangıçta kaydet
-          setFilteredBooks(books); // Başlangıçta filtrelenmiş kitaplar
+          setAllBooks(books);
+          setFilteredBooks(books); 
         } catch (error) {
           console.error('Tagler alınırken bir hata oluştu:', error);
         }
@@ -43,7 +41,6 @@ const TagSearchForBook = ({ userId }) => {
     }, [userId]);
   
     useEffect(() => {
-      // Tagler değiştiğinde kitapları filtrele
       const updatedFilteredBooks = filterBooksByTags();
       setFilteredBooks(updatedFilteredBooks);
     }, [selectedTags, allBooks]);
@@ -56,10 +53,9 @@ const TagSearchForBook = ({ userId }) => {
       }
     };
   
-    // Seçili tagler ile kitapları filtreleme fonksiyonu
     const filterBooksByTags = () => {
       if (selectedTags.length === 0) {
-        return allBooks; // Seçili tag yoksa tüm kitapları döndür
+        return allBooks; 
       }
   
       return allBooks.filter(book =>
@@ -67,12 +63,10 @@ const TagSearchForBook = ({ userId }) => {
       );
     };
   
-    // Tag arama işlemi
     const filteredTags = tags.filter(tag =>
       tag.toLowerCase().includes(searchTerm.toLowerCase())
     );
   
-    // Kitap kapağı URL'ini düzgün bir şekilde çekme fonksiyonu
     const getBookCoverUrl = (book) => {
       return book.coverImage 
         ? (book.coverImage.startsWith('uploads') 
@@ -81,7 +75,6 @@ const TagSearchForBook = ({ userId }) => {
         : 'https://via.placeholder.com/150';
     };
   
-    // Kart üzerindeki etiketlere tıklama işlemi
     const handleTagClick = (tag) => {
       setSearchTerm(tag.text);
     };
@@ -90,7 +83,6 @@ const TagSearchForBook = ({ userId }) => {
       <Container className="mt-4 text-center">
         <h3 className="mb-4">Tüm Tagler</h3>
   
-        {/* Arama Kutusu */}
         <Form.Control
           type="text"
           placeholder="Tag ara..."
@@ -100,7 +92,6 @@ const TagSearchForBook = ({ userId }) => {
           style={{ width: '14rem', margin: '0 auto' }}
         />
   
-        {/* Tagler Listesi */}
         <Row className="m-2">
           {filteredTags.length > 0 ? (
             filteredTags.map((tag, index) => (
