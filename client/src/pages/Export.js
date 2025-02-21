@@ -3,13 +3,10 @@ import { Button, Modal, ListGroup, Form } from 'react-bootstrap';
 import { saveAs } from 'file-saver';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
+import html2pdf from 'html2pdf.js';
 import { Document, Packer, Paragraph } from 'docx';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const Export = ({ bookId }) => {
   const [quotes, setQuotes] = useState([]);
@@ -46,70 +43,48 @@ const Export = ({ bookId }) => {
   };
 
   const exportQuotesToPDF = () => {
-    const margin = 15;
-    const docDefinition = {
-      content: selectedQuotes.map(quoteId => {
-        const quote = quotes.find(q => q._id === quoteId);
-        if (quote) {
-          const cleanedText = cleanText(quote.text);
-          const text = `Sayfa ${quote.pageNo || 'N/A'}: ${cleanedText}`;
+    const content = selectedQuotes.map(quoteId => {
+      const quote = quotes.find(q => q._id === quoteId);
+      if (quote) {
+        const cleanedText = cleanText(quote.text);
+        const text = `Sayfa ${quote.pageNo || 'N/A'}: ${cleanedText}`;
   
-          const content = [
-            { text, margin: [margin, 0, margin, 0], fontSize: 12, style: 'quoteText' }
-          ];
+        const content = [
+          `<p style="margin: 5px; font-size: 12px;">${text}</p>`
+        ];
   
-          if (quote.quoteNotes && quote.quoteNotes.length > 0) {
-            quote.quoteNotes.forEach(note => {
-              const noteText = cleanText(note.text);
-              content.push({ text: `  - ${noteText}`, margin: [margin + 5, 0, margin, 0], fontSize: 12, style: 'noteText' });
-            });
-          }
-  
-          return content;
+        if (quote.quoteNotes && quote.quoteNotes.length > 0) {
+          quote.quoteNotes.forEach(note => {
+            const noteText = cleanText(note.text);
+            content.push(`<p style="margin-left: 10px; font-size: 12px;">- ${noteText}</p>`);
+          });
         }
-        return [];
-      }).flat(),
-      styles: {
-        quoteText: {
-          margin: [0, 5],
-        },
-        noteText: {
-          margin: [0, 2],
-        }
-      },
-      pageMargins: [margin, margin, margin, margin],
-    };
-
-    pdfMake.createPdf(docDefinition).download('alintilarim.pdf');
+  
+        return content.join('');
+      }
+      return '';
+    }).join('');
+  
+    const element = document.createElement('div');
+    element.innerHTML = content;
+    html2pdf(element);
   };
 
   const exportNotesToPDF = () => {
-    const margin = 10;
-    const docDefinition = {
-      content: selectedNotes.map(noteId => {
-        const note = notes.find(n => n._id === noteId);
-        if (note) {
-          const cleanedText = cleanText(note.text);
-          const text = `Sayfa ${note.pageNo || 'N/A'}: ${cleanedText}`;
+    const content = selectedNotes.map(noteId => {
+      const note = notes.find(n => n._id === noteId);
+      if (note) {
+        const cleanedText = cleanText(note.text);
+        const text = `Sayfa ${note.pageNo || 'N/A'}: ${cleanedText}`;
   
-          return {
-            text,
-            margin: [margin, 5, margin, 5],
-            fontSize: 12,
-            style: 'noteText',
-          };
-        }
-        return {};
-      }),
-      styles: {
-        noteText: {
-          margin: [0, 5],
-        }
-      },
-      pageMargins: [margin, margin, margin, margin],
-    };
-
-    pdfMake.createPdf(docDefinition).download('notlarim.pdf');
+        return `<p style="margin: 5px; font-size: 12px;">${text}</p>`;
+      }
+      return '';
+    }).join('');
+  
+    const element = document.createElement('div');
+    element.innerHTML = content;
+    html2pdf(element);
   };
 
   const exportQuotesToWord = () => {
