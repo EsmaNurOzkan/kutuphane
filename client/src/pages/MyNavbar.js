@@ -10,7 +10,7 @@ function MyNavbar() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/home');
+    navigate('/');
     window.location.reload();
   };
 
@@ -19,7 +19,7 @@ function MyNavbar() {
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav  className="navbar-main m-auto">
-          <Nav.Link as={Link} to="/home">Anasayfa </Nav.Link>
+          <Nav.Link as={Link} to="/">Anasayfa </Nav.Link>
           <NavDropdown title="Kütüphanem " id="basic-nav-dropdown">
             <NavDropdown.Item as={Link} to="/my-shelve">
               Kitaplığım 

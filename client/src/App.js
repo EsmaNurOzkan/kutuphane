@@ -86,7 +86,7 @@ function App() {
       </div> 
       )}
       <Routes>
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/reset-password" element={<ResetPassword />} />
@@ -98,7 +98,7 @@ function App() {
         <Route path="/view-mode" element={!!localStorage.getItem('token') ? <ViewMode /> : <Navigate to="/login" />} />
         <Route path="/quick-notes" element={!!localStorage.getItem('token') ? <QuickNotes /> : <Navigate to="/login" />} />
         <Route path="/report-issue" element={!!localStorage.getItem('token') ? <ReportIssue /> : <Navigate to="/login" />} />
-        <Route path="*" element={<Navigate to="/home" />} /> 
+        <Route path="*" element={<Navigate to="/" />} /> 
       </Routes>
     </Router>
     </AppProvider>
