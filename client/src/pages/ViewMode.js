@@ -73,18 +73,18 @@ const ViewMode = () => {
     const content = groupedContent[pageNo] || { quotes: [], notes: [] };
     return (
       <div>
-        <h4 className="text-center">Sayfa {pageNo}</h4>
+        <h4 className="text-center">Page {pageNo}</h4>
         <Row>
           {content.quotes.map((quote, i) => (
             <Col key={i} sm={12} className="mb-3">
               <Card>
                 <Card.Body>
                   <Card.Text>
-                    <strong>Alıntı:</strong> {quote.text}
+                    <strong>Quote:</strong> {quote.text}
                   </Card.Text>
                   {quote.quoteNotes && quote.quoteNotes.length > 0 && (
                     <div>
-                      <strong>Alıntı Notları:</strong>
+                      <strong>Quote Notes:</strong>
                       {quote.quoteNotes.map((note, i) => (
                         <p key={i}>{note.text}</p>
                       ))}
@@ -98,7 +98,7 @@ const ViewMode = () => {
             <Col sm={12} className="mb-3">
               <Card>
                 <Card.Body>
-                  <strong>Notlarım:</strong>
+                  <strong>My Notes:</strong>
                   <ul>
                     {content.notes.map((note, i) => (
                       <li key={i}>{note.text}</li>
@@ -121,7 +121,7 @@ const ViewMode = () => {
       >
         <div className="text-center">
           <Spinner animation="border" role="status" />
-          <p className="mt-2">Alıntı ve notlarınız yükleniyor...</p>
+          <p className="mt-2">Loading your quotes and notes...</p>
         </div>
       </div>
     );
@@ -147,14 +147,14 @@ const ViewMode = () => {
           onClick={() => handlePageChange('prev')}
           disabled={currentPage === 0}
         >
-          Önceki Sayfa
+          Previous Page
         </Button>
         <Button
           variant="secondary"
           onClick={() => handlePageChange('next')}
           disabled={currentPage === getSortedPageNumbers().length - 1}
         >
-          Sonraki Sayfa
+          Next Page
         </Button>
       </div>
     </div>

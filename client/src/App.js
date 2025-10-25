@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { AppProvider } from './AppContext'; 
 import { jwtDecode } from 'jwt-decode';
@@ -53,16 +52,16 @@ function App() {
       const decodedToken = jwtDecode(token);
       const currentTime = Date.now() / 1000; 
       if (decodedToken.exp < currentTime) {
-        console.log('Token süresi dolmuş. Yeniden giriş yapmanız gerekebilir.');
+        console.log('Token has expired. You may need to log in again.');
         localStorage.removeItem('token');
         setShowExpiredMessage(true); 
 
       } else {
-        console.log('Token geçerli ve süresi devam ediyor.');
+        console.log('Token is valid and not expired.');
         setUserId(decodedToken.id); 
       }
     } else {
-      console.log('Token mevcut değil.');
+      console.log('No token found.');
     }
   };
 
@@ -73,16 +72,13 @@ function App() {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet" />
-
         <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet"/>
-
         <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet"></link>
-
     </Helmet>
       <MyNavbar /> 
          {showExpiredMessage && (
         <div style={{ margin:"1rem", padding:"0.5 rem", color:"black", opacity:"0.3", display: 'inline-block', justifyContent: 'center', alignItems: 'center' , backgroundColor: 'crimson', textAlign: 'center', width:"auto"}}>
-        Oturum süreniz doldu, lütfen tekrar giriş yapın.
+        Your session has expired, please log in again.
       </div> 
       )}
       <Routes>

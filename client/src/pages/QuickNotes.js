@@ -26,8 +26,8 @@ function QuickNotes() {
         const sortedNotes = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
         setNotes(sortedNotes);
       } catch (error) {
-        console.error('Notları çekerken hata oluştu:', error);
-        setError('Notları çekerken hata oluştu');
+        console.error('Error fetching notes:', error);
+        setError('An error occurred while fetching notes.');
       } finally {
         setLoading(false);
       }
@@ -38,7 +38,7 @@ function QuickNotes() {
 
   const handleAddNote = async () => {
     if (newNote.trim() === '') {
-      setError('Not alanını boş bırakmayın.');
+      setError('Please do not leave the note empty.');
       return;
     }
     const token = localStorage.getItem('token');
@@ -50,7 +50,7 @@ function QuickNotes() {
       setNewNote('');
     } catch (error) {
       console.error('Error adding note:', error);
-      setError('Not eklenemedi.');
+      setError('Failed to add note.');
     }
   };
 
@@ -67,12 +67,12 @@ function QuickNotes() {
       setSelectedNote(null);
     } catch (error) {
       console.error('Error editing note:', error);
-      setError('Not düzenlenemedi');
+      setError('Failed to edit note.');
     }
   };
 
   const handleDeleteNote = async () => {
-    const confirm = window.confirm('Silmek istediğinizden emin misiniz?');
+    const confirm = window.confirm('Are you sure you want to delete this note?');
     if (!confirm) return;
     const token = localStorage.getItem('token');
     try {
@@ -83,7 +83,7 @@ function QuickNotes() {
       setSelectedNote(null);
     } catch (error) {
       console.error('Error deleting note:', error);
-      setError('Not silinemedi');
+      setError('Failed to delete note.');
     }
   };
 
@@ -99,25 +99,25 @@ function QuickNotes() {
       
       {loading ? (
         <div className="text-center">
-          <p>Notlarınız yükleniyor...</p>
+          <p>Loading your notes...</p>
           <Spinner animation="border" />
         </div>
       ) : (
         <>
           <Form>
             <Form.Group controlId="formNote">
-              <Form.Label>Yeni bir not ekle</Form.Label>
+              <Form.Label>Add a new note</Form.Label>
               <Form.Control
                 type="text"
                 as="textarea"
                 rows={7}
                 value={newNote}
                 onChange={(e) => setNewNote(e.target.value)}
-                placeholder="Notunuzu girin"
+                placeholder="Enter your note"
               />
             </Form.Group>
             <Button variant="primary" onClick={handleAddNote} className="mt-2">
-              Notu ekle
+              Add Note
             </Button>
             <Button variant="secondary" className="mt-2 ml-2" onClick={() => setShowOcrModal(true)}>
               OCR
@@ -125,10 +125,10 @@ function QuickNotes() {
           </Form>
   
           <div className="mt-4">
-            <h4>Hızlı notlarım</h4>
+            <h4>My Quick Notes</h4>
             <ListGroup>
               {notes.length === 0 ? (
-                <ListGroup.Item>Not bulunamadı</ListGroup.Item>
+                <ListGroup.Item>No notes found</ListGroup.Item>
               ) : (
                 notes.map((note) => (
                   <ListGroup.Item
@@ -149,7 +149,7 @@ function QuickNotes() {
           {selectedNote && (
             <Modal show={true} onHide={() => setSelectedNote(null)} size="lg">
               <Modal.Header closeButton>
-                <Modal.Title>Notu düzenle</Modal.Title>
+                <Modal.Title>Edit Note</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <Form.Control
@@ -161,10 +161,10 @@ function QuickNotes() {
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="primary" onClick={handleEditNote}>
-                  Kaydet
+                  Save
                 </Button>
                 <Button variant="danger" onClick={handleDeleteNote}>
-                  Notu sil
+                  Delete Note
                 </Button>
               </Modal.Footer>
             </Modal>
@@ -174,14 +174,14 @@ function QuickNotes() {
 
       <Modal show={showOcrModal} onHide={() => setShowOcrModal(false)} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>OCR İşlemi</Modal.Title>
+          <Modal.Title>OCR Process</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Ocr target={newNote} onResultsSubmit={handleOcrSubmit} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowOcrModal(false)}>
-            Kapat
+            Close
           </Button>
         </Modal.Footer>
       </Modal>

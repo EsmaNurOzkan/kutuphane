@@ -5,16 +5,16 @@ exports.addNote = async (req, res) => {
   try {
     const book = await Book.findById(bookId);
     if (!book) {
-      return res.status(404).json({ message: 'Kitap bulunamadı' });
+      return res.status(404).json({ message: 'Book not found' });
     }
 
     const newNote = { text, pageNo, tags }; 
     book.notes.push(newNote);
     await book.save();
 
-    res.status(201).json({ message: 'Not başarıyla eklendi', notes: book.notes });
+    res.status(201).json({ message: 'Note added successfully', notes: book.notes });
   } catch (error) {
-    res.status(500).json({ message: 'Not eklenirken hata oluştu', error });
+    res.status(500).json({ message: 'Error occurred while adding the note', error });
   }
 };
 
@@ -24,20 +24,20 @@ exports.deleteNote = async (req, res) => {
   try {
     const book = await Book.findById(bookId);
     if (!book) {
-      return res.status(404).json({ message: 'Kitap bulunamadı' });
+      return res.status(404).json({ message: 'Book not found' });
     }
 
     const noteIndex = book.notes.findIndex(note => note._id.toString() === noteId);
     if (noteIndex === -1) {
-      return res.status(404).json({ message: 'Not bulunamadı' });
+      return res.status(404).json({ message: 'Note not found' });
     }
 
     book.notes.splice(noteIndex, 1);
     await book.save();
 
-    res.status(200).json({ message: 'Not silindi', notes: book.notes });
+    res.status(200).json({ message: 'Note deleted', notes: book.notes });
   } catch (error) {
-    res.status(500).json({ message: 'Not silinirken hata oluştu', error });
+    res.status(500).json({ message: 'Error occurred while deleting the note', error });
   }
 };
 
@@ -48,12 +48,12 @@ exports.updateNote = async (req, res) => {
   try {
     const book = await Book.findById(bookId);
     if (!book) {
-      return res.status(404).json({ message: 'Kitap bulunamadı' });
+      return res.status(404).json({ message: 'Book not found' });
     }
 
     const note = book.notes.id(noteId);
     if (!note) {
-      return res.status(404).json({ message: 'Not bulunamadı' });
+      return res.status(404).json({ message: 'Note not found' });
     }
 
     note.text = text || note.text;
@@ -61,12 +61,11 @@ exports.updateNote = async (req, res) => {
     note.tags = tags || note.tags;
 
     await book.save();
-    res.status(200).json({ message: 'Not güncellendi', notes: book.notes });
+    res.status(200).json({ message: 'Note updated', notes: book.notes });
   } catch (error) {
-    res.status(500).json({ message: 'Not güncellenirken hata oluştu', error });
+    res.status(500).json({ message: 'Error occurred while updating the note', error });
   }
 };
-
 
 exports.getNotes = async (req, res) => {
   const { bookId } = req.params;
@@ -74,12 +73,11 @@ exports.getNotes = async (req, res) => {
   try {
     const book = await Book.findById(bookId).select('notes');
     if (!book) {
-      return res.status(404).json({ message: 'Kitap bulunamadı' });
+      return res.status(404).json({ message: 'Book not found' });
     }
 
     res.status(200).json({ notes: book.notes });
   } catch (error) {
-    res.status(500).json({ message: 'Notlar getirilirken hata oluştu', error });
+    res.status(500).json({ message: 'Error occurred while fetching notes', error });
   }
 };
- 

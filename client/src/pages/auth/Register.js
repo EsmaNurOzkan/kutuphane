@@ -23,13 +23,13 @@ function Register() {
     try {
       await axios.post(`${BACKEND_URL}/api/auth/send-code`, { email });
       setShowModal(true);
-      setMessage('Kayıt tamamlanması için e-posta adresinize bir doğrulama kodu gönderildi.');
+      setMessage('A verification code has been sent to your email to complete registration.');
       setCodeSent(true);
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        setError('Bu e-posta zaten kayıtlı.');
+        setError('This email is already registered.');
       } else {
-        setError('Kod gönderilirken bir hata oluştu.');
+        setError('An error occurred while sending the code.');
       }
     } finally {
       setLoading(false); 
@@ -40,7 +40,7 @@ function Register() {
     e.preventDefault();
 
     if (password.length < 8) {
-      setError('Şifreniz 8 karakterden uzun olmalıdır.');
+      setError('Your password must be at least 8 characters long.');
       return;
     }
 
@@ -53,16 +53,15 @@ function Register() {
       await axios.post(`${BACKEND_URL}/api/auth/register`, {
         username, email, password, code: verificationCode
       });
-      setMessage('Kayıt başarılı.');
+      setMessage('Registration successful.');
       setError('');
-
       setShowModal(false);
 
       setTimeout(() => {
         navigate('/login');
       }, 2000);
     } catch (error) {
-      setError('Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.');
+      setError('An error occurred during registration. Please try again.');
     }
   };
 
@@ -73,43 +72,43 @@ function Register() {
           <Col sm={12} md={8} lg={6} className="mx-auto">
             <Card className="border-0 shadow-lg bg-body" style={{ borderRadius: '3rem', padding: '1.5rem' }}>
               <Card.Body>
-                <h3 className="text-center mb-4">Kayıt Ol</h3>
+                <h3 className="text-center mb-4">Register</h3>
                 <Form onSubmit={handleSubmit}>
                   <Form.Group id="username" className="mb-3">
-                    <Form.Label>Kullanıcı Adı</Form.Label>
+                    <Form.Label>Username</Form.Label>
                     <Form.Control
                       type="text"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
-                      placeholder="Kullanıcı Adı"
+                      placeholder="Username"
                       required
                     />
                   </Form.Group>
 
                   <Form.Group id="email" className="mb-3">
-                    <Form.Label>E-posta</Form.Label>
+                    <Form.Label>Email</Form.Label>
                     <Form.Control
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="E-posta"
+                      placeholder="Email"
                       required
                     />
                   </Form.Group>
 
                   <Form.Group id="password" className="mb-4">
-                    <Form.Label>Şifre</Form.Label>
+                    <Form.Label>Password</Form.Label>
                     <Form.Control
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Şifre (En az 8 karakter)"
+                      placeholder="Password (Minimum 8 characters)"
                       required
                     />
                   </Form.Group>
 
                   <Button type="submit" className="w-100">
-                    Kayıt Ol
+                    Register
                   </Button>
                 </Form>
 
@@ -123,15 +122,15 @@ function Register() {
 
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Doğrulama Kodu</Modal.Title>
+          <Modal.Title>Verification Code</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Kayıt işlemini tamamlamak için e-posta adresinize gelen doğrulama kodunu girin.</p>
+          <p>To complete your registration, please enter the verification code sent to your email.</p>
           <Form.Group controlId="verificationCode">
-            <Form.Label>Doğrulama Kodu</Form.Label>
+            <Form.Label>Verification Code</Form.Label>
             <Form.Control
               type="text"
-              placeholder="E-posta ile gönderilen kodu girin"
+              placeholder="Enter the code sent to your email"
               value={verificationCode}
               onChange={(e) => setVerificationCode(e.target.value)}
               required
@@ -140,13 +139,13 @@ function Register() {
           {loading && (
             <div className="text-center mt-3">
               <Spinner animation="border" />
-              <p className="mt-2">Kod gönderiliyor...</p>
+              <p className="mt-2">Sending code...</p>
             </div>
           )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={handleSubmit}>
-            Doğrula ve Kayıt Ol
+            Verify and Register
           </Button>
         </Modal.Footer>
       </Modal>

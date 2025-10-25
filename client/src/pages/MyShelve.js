@@ -8,7 +8,6 @@ import Notes from './Notes';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
 
-
 const MyShelve = ({ userId }) => {
   const [books, setBooks] = useState([]);
   const [viewMode, setViewMode] = useState('grid');
@@ -28,7 +27,7 @@ const MyShelve = ({ userId }) => {
         setBooks(response.data);
       } catch (error) {
         console.error('Error fetching books:', error);
-        setErrorMessage('Kitaplar yüklenirken bir hata oluştu.');
+        setErrorMessage('An error occurred while loading your books.');
       } finally {
         setLoading(false);
       }
@@ -53,7 +52,7 @@ const MyShelve = ({ userId }) => {
       setErrorMessage('');
     } catch (error) {
       console.error('Error deleting book:', error);
-      setErrorMessage('Kitap silinirken bir hata oluştu.');
+      setErrorMessage('An error occurred while deleting the book.');
     }
   };
 
@@ -70,13 +69,13 @@ const MyShelve = ({ userId }) => {
   return (
     <Container>
       <div className="d-flex justify-content-between align-items-center my-4">
-        <h1>Kitaplığım</h1>
+        <h1>My Library</h1>
         <div>
           <Button onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')} className="me-2">
-            {viewMode === 'grid' ? 'Kitaplarımı Listele' : 'Kapak Resimleriyle Gör'}
+            {viewMode === 'grid' ? 'List My Books' : 'View Covers'}
           </Button>
           <Button variant="info" onClick={() => setShowTagModal(true)}>
-            Tag ile Ara
+            Search by Tag
           </Button>
         </div>
       </div>
@@ -84,14 +83,14 @@ const MyShelve = ({ userId }) => {
       {loading ? (
         <div className="text-center my-5">
           <Spinner animation="border" role="status" />
-          <p>Kitaplığınız yükleniyor...</p>
+          <p>Loading your library...</p>
         </div>
       ) : (
         <>
           {viewMode === 'grid' ? (
             <Row>
               {books.length === 0 ? (
-                <Col><p>Kitaplığınız boş</p></Col>
+                <Col><p>Your library is empty</p></Col>
               ) : (
                 books.map((book) => {
                   const coverImageUrl = book.coverImage 
@@ -107,7 +106,7 @@ const MyShelve = ({ userId }) => {
                           <Card.Title>{book.title}</Card.Title>
                           <Card.Subtitle className="mb-2 text-muted">{book.author}</Card.Subtitle>
                           <Card.Text>
-                            <strong>Sayfa Sayısı:</strong> {book.pageCount}<br />
+                            <strong>Page Count:</strong> {book.pageCount}<br />
                             <strong>ISBN:</strong> {book.isbn || 'N/A'}
                           </Card.Text>
                           <Button 
@@ -120,7 +119,7 @@ const MyShelve = ({ userId }) => {
                             }}
                             style={{ position: 'absolute', bottom: '10px', right: '10px' }}
                           >
-                            Sil
+                            Delete
                           </Button>
                         </Card.Body>
                       </Card>
@@ -132,7 +131,7 @@ const MyShelve = ({ userId }) => {
           ) : (
             <ListGroup>
               {books.length === 0 ? (
-                <ListGroup.Item>Kitaplığınız boş..</ListGroup.Item>
+                <ListGroup.Item>Your library is empty..</ListGroup.Item>
               ) : (
                 books.map((book) => (
                   <ListGroup.Item 
@@ -143,7 +142,7 @@ const MyShelve = ({ userId }) => {
                   >
                     <div>
                       <strong>{book.title}</strong>, {book.author}
-                      <div><strong>Sayfa Sayısı:</strong> {book.pageCount}</div>
+                      <div><strong>Page Count:</strong> {book.pageCount}</div>
                       <div><strong>ISBN:</strong> {book.isbn || 'N/A'}</div>
                     </div>
                     <Button 
@@ -155,7 +154,7 @@ const MyShelve = ({ userId }) => {
                         setShowDeleteModal(true); 
                       }}
                     >
-                      Sil
+                      Delete
                     </Button>
                   </ListGroup.Item>
                 ))
@@ -170,7 +169,7 @@ const MyShelve = ({ userId }) => {
           <Modal.Header closeButton>
             <Modal.Title>{selectedBook.title}</Modal.Title>
             <Button variant="primary" className="ml-auto" onClick={handleViewMode}>
-              Okuma Modu
+              Reading Mode
             </Button>
           </Modal.Header>
           <Modal.Body>
@@ -193,43 +192,43 @@ const MyShelve = ({ userId }) => {
             </Row>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setSelectedBook(null)}>Kapat</Button>
+            <Button variant="secondary" onClick={() => setSelectedBook(null)}>Close</Button>
           </Modal.Footer>
         </Modal>
       )}
 
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Kitap Sil</Modal.Title>
+          <Modal.Title>Delete Book</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Bu kitabı kaldırmak istediğinize emin misiniz?</p>
+          <p>Are you sure you want to remove this book?</p>
           {errorMessage && <p className="text-danger">{errorMessage}</p>}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>İptal</Button>
-          <Button variant="danger" onClick={handleDeleteBook}>Sil</Button>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
+          <Button variant="danger" onClick={handleDeleteBook}>Delete</Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={showTagModal} onHide={() => setShowTagModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Tag ile Ara</Modal.Title>
+          <Modal.Title>Search by Tag</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Button variant="secondary" onClick={() => { 
               setShowTagModal(false); 
               navigate('/tag-search-books'); 
-            }}>Kitap Ara</Button>
+            }}>Search Books</Button>
           <Button variant="secondary" onClick={() => { 
               setShowTagModal(false); 
               navigate('/tag-search'); 
             }}>
-              Alıntı/Not Ara
+              Search Quotes/Notes
           </Button>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowTagModal(false)}>Kapat</Button>
+          <Button variant="secondary" onClick={() => setShowTagModal(false)}>Close</Button>
         </Modal.Footer>
       </Modal>
     </Container>

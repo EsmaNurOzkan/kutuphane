@@ -9,7 +9,6 @@ require('dotenv').config();
 exports.sendResetLink = async (req, res) => {
   const { email } = req.body;
   
-
   if (!email) {
     return res.status(400).json({ message: 'Email is required' });
   }
@@ -38,7 +37,7 @@ exports.sendResetLink = async (req, res) => {
       from: process.env.EMAIL_USER,
       to: user.email,
       subject: 'Password Reset Request',
-      text: `Şifre sıfırlama isteğinde bulundunuz. İşte sıfırlama kodunuz: ${resetCode}`,
+      text: `You requested a password reset. Your reset code is: ${resetCode}`,
     };
 
     await transporter.sendMail(mailOptions);
@@ -98,8 +97,6 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-
-
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -108,7 +105,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-  exports.sendVerificationCode = async (req, res) => {
+exports.sendVerificationCode = async (req, res) => {
   const { email } = req.body;
 
   if (!email) {
@@ -138,7 +135,6 @@ const transporter = nodemailer.createTransport({
     res.status(500).json({ message: 'Error sending verification code', error: error.message });
   }
 };
-
 
 exports.register = async (req, res) => {
   const { username, email, password, code } = req.body;
@@ -170,8 +166,6 @@ exports.register = async (req, res) => {
     res.status(500).json({ message: 'Error registering user' });
   }
 };
-
-
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;

@@ -20,17 +20,17 @@ function ResetPassword() {
     setLoading(true);
 
     if (!email) {
-      setMessage('Lütfen geçerli bir e-posta adresi girin');
+      setMessage('Please enter a valid email address');
       setLoading(false);
       return;
     }
 
     try {
       await axios.post(`${BACKEND_URL}/api/auth/sendresetlink`, { email });
-      setMessage('4 haneli kod e-posta adresinize gönderildi');
+      setMessage('A 4-digit code has been sent to your email address');
       setStep(2);
     } catch (error) {
-      setMessage('E-posta gönderilirken bir hata oluştu');
+      setMessage('An error occurred while sending the email');
     } finally {
       setLoading(false);
     }
@@ -43,13 +43,13 @@ function ResetPassword() {
     try {
       const response = await axios.post(`${BACKEND_URL}/api/auth/verifycode`, { email, resetCode });
       if (response.data.success) {
-        setMessage('Kod doğrulandı. Şimdi yeni şifrenizi oluşturabilirsiniz.');
+        setMessage('Code verified. You can now create your new password.');
         setStep(3);
       } else {
-        setMessage('Kod yanlış. Lütfen tekrar deneyin.');
+        setMessage('Incorrect code. Please try again.');
       }
     } catch (error) {
-      setMessage('Kod doğrulama sırasında bir hata oluştu.');
+      setMessage('An error occurred while verifying the code.');
     } finally {
       setLoading(false);
     }
@@ -60,23 +60,23 @@ function ResetPassword() {
     setLoading(true);
 
     if (newPassword.length < 8) {
-      setMessage('Şifre en az 8 karakter uzunluğunda olmalıdır');
+      setMessage('Password must be at least 8 characters long');
       setLoading(false);
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setMessage('Şifreler uyuşmuyor');
+      setMessage('Passwords do not match');
       setLoading(false);
       return;
     }
 
     try {
       await axios.post(`${BACKEND_URL}/api/auth/resetpassword`, { email, resetCode, newPassword });
-      setMessage('Şifre başarıyla sıfırlandı');
+      setMessage('Password has been successfully reset');
       setTimeout(() => navigate('/login'), 2000);
     } catch (error) {
-      setMessage('Şifre sıfırlanırken bir hata oluştu');
+      setMessage('An error occurred while resetting the password');
     } finally {
       setLoading(false);
     }
@@ -86,63 +86,63 @@ function ResetPassword() {
     <Container className="mt-5">
       <Row className="justify-content-center">
         <Col md={6}>
-          <h1 className="text-center mb-4">Şifre Sıfırlama</h1>
+          <h1 className="text-center mb-4">Reset Password</h1>
           {loading && <div className="d-flex justify-content-center mb-3"><Spinner animation="border" /></div>}
-          {message && <Alert variant={message.startsWith('Şifre') ? 'success' : 'danger'}>{message}</Alert>}
+          {message && <Alert variant={message.startsWith('Password') ? 'success' : 'danger'}>{message}</Alert>}
           {step === 1 && (
             <Form onSubmit={handleSendResetCode}>
               <Form.Group controlId="email">
-                <Form.Label>E-posta adresinizi girin</Form.Label>
+                <Form.Label>Enter your email address</Form.Label>
                 <Form.Control
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="E-posta adresinizi girin"
+                  placeholder="Enter your email address"
                 />
               </Form.Group>
               <Button variant="primary" type="submit" className="mt-3" disabled={loading}>
-                4 Haneli Kodu Gönder
+                Send 4-Digit Code
               </Button>
             </Form>
           )}
           {step === 2 && (
             <Form onSubmit={handleVerifyCode}>
               <Form.Group controlId="resetCode">
-                <Form.Label>4 haneli kodu girin</Form.Label>
+                <Form.Label>Enter the 4-digit code</Form.Label>
                 <Form.Control
                   type="text"
                   value={resetCode}
                   onChange={(e) => setResetCode(e.target.value)}
-                  placeholder="4 haneli kodu girin"
+                  placeholder="Enter the 4-digit code"
                 />
               </Form.Group>
               <Button variant="primary" type="submit" className="mt-3" disabled={loading}>
-                Kodu Doğrula
+                Verify Code
               </Button>
             </Form>
           )}
           {step === 3 && (
             <Form onSubmit={handleResetPassword}>
               <Form.Group controlId="newPassword">
-                <Form.Label>Yeni şifre</Form.Label>
+                <Form.Label>New Password</Form.Label>
                 <Form.Control
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Yeni şifre"
+                  placeholder="New password"
                 />
               </Form.Group>
               <Form.Group controlId="confirmPassword">
-                <Form.Label>Yeni şifreyi tekrar girin</Form.Label>
+                <Form.Label>Re-enter New Password</Form.Label>
                 <Form.Control
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Yeni şifreyi tekrar girin"
+                  placeholder="Re-enter new password"
                 />
               </Form.Group>
               <Button variant="primary" type="submit" className="mt-3" disabled={loading}>
-                Şifreyi Sıfırla
+                Reset Password
               </Button>
             </Form>
           )}

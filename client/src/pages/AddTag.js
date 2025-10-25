@@ -33,7 +33,7 @@ const AddTag = ({ bookId, onSuccess }) => {
         onSuccess('addTag');
       }
     } catch (error) {
-      setError(error.response ? error.response.data.message : 'Bir hata oluştu');
+      setError(error.response ? error.response.data.message : 'An error occurred');
       setMessage('');
     }
   };
@@ -42,7 +42,7 @@ const AddTag = ({ bookId, onSuccess }) => {
     <Container>
       <Row className="justify-content-md-center">
         <Col md={6}>
-          <h2 className="text-center mb-4">Etiket Ekle</h2>
+          <h2 className="text-center mb-4">Add Tag</h2>
           <p className="text-center">Book ID: {bookId}</p>
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formTag">
@@ -51,11 +51,11 @@ const AddTag = ({ bookId, onSuccess }) => {
                 type="text"
                 value={tagText}
                 onChange={(e) => setTagText(e.target.value)}
-                placeholder="Tag ekleyin"
+                placeholder="Enter a tag"
               />
             </Form.Group>
             <Button variant="primary" onClick={handleAddTag} className="mb-3">
-              Tag Ekle
+              Add Tag
             </Button>
             <ListGroup className="mb-3">
               {tags.map((tag, index) => (
@@ -63,7 +63,7 @@ const AddTag = ({ bookId, onSuccess }) => {
               ))}
             </ListGroup>
             <Button variant="success" type="submit" block>
-              Tag'leri Gönder
+              Submit Tags
             </Button>
           </Form>
           {message && <Alert variant="success" className="mt-3">{message}</Alert>}

@@ -6,7 +6,6 @@ import { AppContext } from '../AppContext';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
 
-
 const AddQuote = ({ bookId, pageCount, onSuccess }) => {
   const { quotesUpdated, setQuotesUpdated } = useContext(AppContext); 
   const [quoteText, setQuoteText] = useState('');
@@ -71,13 +70,13 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
     e.preventDefault();
 
     if (pageNo > pageCount) {
-      setError(`Sayfa sayısını aştınız. Lütfen ${pageCount} veya daha düşük bir değer girin.`);
+      setError(`You exceeded the page count. Please enter ${pageCount} or a lower number.`);
       setTimeout(() => setError(''), 3000);
       return;
     }
 
     if (!quoteText.trim()) {
-      setError("Lütfen alıntı metnini doldurun.");
+      setError("Please fill in the quote text.");
       setTimeout(() => setError(''), 3000);
       return;
     }
@@ -93,15 +92,13 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
       };
 
       await axios.post(`${BACKEND_URL}/api/quote/add`, dataToSend);
-      setSuccess('Alıntı başarıyla eklendi.');
+      setSuccess('Quote added successfully.');
       setError('');
 
       setQuotesUpdated(true); 
-
-
       if (onSuccess) onSuccess();
     } catch (error) {
-      setError('Bir hata oluştu. Lütfen tekrar deneyin.');
+      setError('An error occurred. Please try again.');
       setSuccess('');
     }
   };
@@ -112,7 +109,7 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
       {success && <Alert variant="success">{success}</Alert>}
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="pageNo">
-          <Form.Label>Sayfa Numarası</Form.Label>
+          <Form.Label>Page Number</Form.Label>
           <Form.Control
             value={pageNo}
             onChange={handlePageNoChange}
@@ -121,7 +118,7 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
         </Form.Group>       
 
         <Form.Group controlId="quoteText">
-          <Form.Label>Alıntı Metni</Form.Label>
+          <Form.Label>Quote Text</Form.Label>
           <Form.Control
             as="textarea"
             rows={5}
@@ -129,12 +126,12 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
             onChange={handleQuoteTextChange}
           />
           <Button variant="secondary" className="mt-2" onClick={handleTextOcrClick}>
-            OCR ile Doldur
+            Fill with OCR
           </Button>
         </Form.Group>
 
         <Form.Group controlId="quoteNotes">
-          <Form.Label>Alıntı Notları (Opsiyonel)</Form.Label>
+          <Form.Label>Quote Notes (Optional)</Form.Label>
           {quoteNotes.map((note, index) => (
             <div key={index} className="d-flex mb-2 align-items-center">
               <Form.Control
@@ -144,42 +141,42 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
                 onChange={(e) => handleQuoteNoteChange(index, e)}
               />
               <Button variant="danger" className="ms-2" onClick={() => removeQuoteNote(index)}>
-                Sil
+                Delete
               </Button>
               <Button variant="secondary" className="ms-2" onClick={() => handleNoteOcrClick(index)}>
                 OCR
               </Button>
             </div>
           ))}
-          <Button variant="primary" className=" btn-sm mb-2" onClick={addQuoteNote}>
-            Daha fazla not ekle
+          <Button variant="primary" className="btn-sm mb-2" onClick={addQuoteNote}>
+            Add more notes
           </Button>
         </Form.Group>
 
         <Form.Group controlId="tags">
-          <Form.Label>Tagler (virgül ile ayırarak yazın)</Form.Label>
+          <Form.Label>Tags (separate with commas)</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Tagler"
+            placeholder="Tags"
             onChange={handleTagsChange}
           />
         </Form.Group>
 
         <Button variant="success" type="submit">
-          Kaydet
+          Save
         </Button>
       </Form>
 
       <Modal show={showOcrModal} onHide={() => setShowOcrModal(false)} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>OCR İşlemi</Modal.Title>
+          <Modal.Title>OCR Process</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Ocr onResultsSubmit={handleOcrResults} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowOcrModal(false)}>
-            Kapat
+            Close
           </Button>
         </Modal.Footer>
       </Modal>

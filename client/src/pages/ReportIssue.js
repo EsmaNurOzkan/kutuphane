@@ -17,7 +17,6 @@ const ReportIssue = () => {
   const [responseMessage, setResponseMessage] = useState('');
   const navigate = useNavigate(); 
 
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -28,22 +27,22 @@ const ReportIssue = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      
       const token = localStorage.getItem('token');
 
       const res = await axios.post(`${BACKEND_URL}/api/report-issue`, formData, {
         headers: {
-            'Authorization': `Bearer ${token}`,
-          }
+          'Authorization': `Bearer ${token}`,
+        }
       });
+
       setResponseMessage(res.data.message);
       setTimeout(() => {
         setResponseMessage('');
         navigate('/main'); 
       }, 2000);
     } catch (error) {
-      console.error('Form gönderim hatası:', error);
-      setResponseMessage('Bir hata oluştu, lütfen tekrar deneyin.');
+      console.error('Form submission error:', error);
+      setResponseMessage('An error occurred, please try again.');
       setTimeout(() => setResponseMessage(''), 2000);
     }
   };
@@ -52,10 +51,10 @@ const ReportIssue = () => {
     <div className="container mt-5">
       <div className="row justify-content-center">
         <div className="col-md-6">
-          <h2 className="text-center mb-4">Şikayet/Öneri Bildir</h2>
+          <h2 className="text-center mb-4">Report Issue / Suggestion</h2>
           <form onSubmit={handleSubmit} className="needs-validation" noValidate>
             <div className="mb-3">
-              <label htmlFor="firstName" className="form-label">İsim</label>
+              <label htmlFor="firstName" className="form-label">First Name</label>
               <input
                 type="text"
                 className="form-control"
@@ -67,7 +66,7 @@ const ReportIssue = () => {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="lastName" className="form-label">Soyisim</label>
+              <label htmlFor="lastName" className="form-label">Last Name</label>
               <input
                 type="text"
                 className="form-control"
@@ -91,7 +90,7 @@ const ReportIssue = () => {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="message" className="form-label">Şikayet/Öneri</label>
+              <label htmlFor="message" className="form-label">Issue / Suggestion</label>
               <textarea
                 className="form-control"
                 id="message"
@@ -102,7 +101,7 @@ const ReportIssue = () => {
                 required
               ></textarea>
             </div>
-            <button type="submit" className="btn btn-primary mx-auto d-block">Gönder</button>
+            <button type="submit" className="btn btn-primary mx-auto d-block">Submit</button>
           </form>
           {responseMessage && (
             <div className="alert alert-info mt-3 text-center" role="alert">
@@ -113,7 +112,6 @@ const ReportIssue = () => {
       </div>
     </div>
   );
-  
 };
 
 export default ReportIssue;

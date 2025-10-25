@@ -6,15 +6,14 @@ exports.getAllQuotes = async (req, res) => {
     const book = await Book.findById(bookId);
 
     if (!book) {
-      return res.status(404).json({ message: 'Kitap bulunamadı.' });
+      return res.status(404).json({ message: 'Book not found.' });
     }
 
     res.status(200).json({ quotes: book.quotes });
   } catch (err) {
-    res.status(500).json({ message: 'Bir hata oluştu.', error: err.message });
+    res.status(500).json({ message: 'An error occurred.', error: err.message });
   }
 };
-
 
 exports.updateQuote = async (req, res) => {
   try {
@@ -22,12 +21,12 @@ exports.updateQuote = async (req, res) => {
     const book = await Book.findOne({ _id: bookId });
 
     if (!book) {
-      return res.status(404).json({ message: 'Kitap bulunamadı.' });
+      return res.status(404).json({ message: 'Book not found.' });
     }
 
     const quote = book.quotes.id(quoteId);
     if (!quote) {
-      return res.status(404).json({ message: 'Alıntı bulunamadı.' });
+      return res.status(404).json({ message: 'Quote not found.' });
     }
 
     quote.text = updatedQuote.text || quote.text;
@@ -48,30 +47,29 @@ exports.updateQuote = async (req, res) => {
     }
 
     await book.save();
-    res.status(200).json({ message: 'Alıntı başarıyla güncellendi.', quote });
+    res.status(200).json({ message: 'Quote updated successfully.', quote });
   } catch (err) {
-    res.status(500).json({ message: 'Bir hata oluştu.', error: err.message });
+    res.status(500).json({ message: 'An error occurred.', error: err.message });
   }
 };
-
 
 exports.deleteQuote = async (req, res) => {
   try {
     const { bookId, quoteId, noteId } = req.body;
     if (!bookId || !quoteId) {
-      return res.status(400).json({ message: 'bookId veya quoteId sağlanmadı.' });
+      return res.status(400).json({ message: 'bookId or quoteId not provided.' });
     }
 
     const book = await Book.findOne({ _id: bookId });
 
     if (!book) {
-      return res.status(404).json({ message: 'Kitap bulunamadı.' });
+      return res.status(404).json({ message: 'Book not found.' });
     }
 
     const quoteIndex = book.quotes.findIndex(q => q._id.toString() === quoteId);
 
     if (quoteIndex === -1) {
-      return res.status(404).json({ message: 'Alıntı bulunamadı.' });
+      return res.status(404).json({ message: 'Quote not found.' });
     }
 
     if (noteId) {
@@ -80,17 +78,17 @@ exports.deleteQuote = async (req, res) => {
       if (noteIndex !== -1) {
         book.quotes[quoteIndex].quoteNotes.splice(noteIndex, 1);
         await book.save();
-        return res.status(200).json({ message: 'Not başarıyla silindi.' });
+        return res.status(200).json({ message: 'Note deleted successfully.' });
       } else {
-        return res.status(404).json({ message: 'Not bulunamadı.' });
+        return res.status(404).json({ message: 'Note not found.' });
       }
     } else {
       book.quotes.splice(quoteIndex, 1);
       await book.save();
-      return res.status(200).json({ message: 'Alıntı başarıyla silindi.' });
+      return res.status(200).json({ message: 'Quote deleted successfully.' });
     }
   } catch (err) {
-    return res.status(500).json({ message: 'Bir hata oluştu.', error: err.message });
+    return res.status(500).json({ message: 'An error occurred.', error: err.message });
   }
 };
 
@@ -99,7 +97,7 @@ exports.addQuote = async (req, res) => {
 
   try {
     const book = await Book.findById(bookId);
-    if (!book) return res.status(404).json({ msg: 'Kitap bulunamadı' });
+    if (!book) return res.status(404).json({ msg: 'Book not found' });
 
     const newQuote = { text, quoteNotes, pageNo, tags };
 
@@ -108,8 +106,8 @@ exports.addQuote = async (req, res) => {
 
     res.status(200).json(book);
   } catch (error) {
-    console.error('Hata ayrıntıları:', error); 
+    console.error('Error details:', error); 
     console.error('Stack Trace:', error.stack); 
-    res.status(500).json({ msg: 'Sunucu hatası', error: error.message });
+    res.status(500).json({ msg: 'Server error', error: error.message });
   }
 };

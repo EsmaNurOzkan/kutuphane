@@ -8,7 +8,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import WhiteCover from '../utils/whitecover2.jpg';
 import { Button, Card, Container, Form, Row, Col } from 'react-bootstrap';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const AddBook = () => {
   const navigate = useNavigate();
@@ -78,7 +78,7 @@ const AddBook = () => {
         },
       });
 
-      alert('Kitap başarıyla eklendi!');
+      alert('Book added successfully!');
       navigate('/my-shelve');
     } catch (error) {
       console.error('Error adding book:', error);
@@ -89,7 +89,7 @@ const AddBook = () => {
 
   const handleSearchBooks = async () => {
     if (!searchQuery.trim()) {
-      alert('Lütfen geçerli yazar/kitap adı ya da ISBN girin.');
+      alert('Please enter a valid author/book name or ISBN.');
       return;
     }
 
@@ -120,7 +120,7 @@ const AddBook = () => {
         },
       });
 
-      alert('Kitap başarıyla eklendi.');
+      alert('Book added to your library successfully.');
     } catch (error) {
       console.error('Error adding search result book:', error);
     }
@@ -139,23 +139,23 @@ const AddBook = () => {
       {!isManualEntry ? (
         <div className="mb-4">
           <Button variant="secondary" className="mb-2" onClick={() => handleSelectEntryMode('manual')}>
-            Manuel ekle
+            Add manually
           </Button>
           <Form.Group className="mb-2">
             <Form.Control
               type="text"
-              placeholder="Ara"
+              placeholder="Search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </Form.Group>
           <Button variant="primary" className="mb-4" onClick={handleSearchBooks}>
-            Kitabı ara
+            Search book
           </Button>
           {isLoading && (
             <div className="text-center">
               <Spinner animation="border" />
-              <p>Kitaplar yükleniyor...</p>
+              <p>Loading books...</p>
             </div>
           )}
           <Row xs={1} md={2} lg={3} className="g-4">
@@ -170,21 +170,21 @@ const AddBook = () => {
                         width: '100%',
                         height: '300px',
                         objectFit: 'contain',
-                        borderRadius: '0.25rem', // Optional: to give rounded corners
+                        borderRadius: '0.25rem',
                       }}
                     />
                   )}
                   <Card.Body>
                     <Card.Title>{book.title}</Card.Title>
                     <Card.Text>
-                      Yazar: {book.author}
+                      Author: {book.author}
                       <br />
-                      Sayfa sayısı: {book.pageCount}
+                      Page count: {book.pageCount}
                       <br />
                       ISBN: {book.isbn}
                     </Card.Text>
                     <Button variant="info" size="sm" onClick={() => handleAddSearchResultToLibrary(book)}>
-                      Kitaplığıma ekle
+                      Add to my library
                     </Button>
                   </Card.Body>
                 </Card>
@@ -194,14 +194,14 @@ const AddBook = () => {
         </div>
       ) : (
         <Card className="p-4">
-          <Card.Title className="mb-4">Manuel ekle</Card.Title>
+          <Card.Title className="mb-4">Add manually</Card.Title>
           <Button variant="secondary" className="mb-4" onClick={() => handleSelectEntryMode('search')}>
-            Kitap aramaya dön
+            Back to search
           </Button>
           <Form.Group className="mb-3">
             <Form.Control
               type="text"
-              placeholder="Kitap adı"
+              placeholder="Book title"
               value={bookTitle}
               onChange={(e) => setBookTitle(e.target.value)}
             />
@@ -209,7 +209,7 @@ const AddBook = () => {
           <Form.Group className="mb-3">
             <Form.Control
               type="text"
-              placeholder="Yazar"
+              placeholder="Author"
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
             />
@@ -217,7 +217,7 @@ const AddBook = () => {
           <Form.Group className="mb-3">
             <Form.Control
               type="number"
-              placeholder="Sayfa sayısı"
+              placeholder="Page count"
               value={pageCount}
               onChange={(e) => setPageCount(e.target.value)}
             />
@@ -231,7 +231,7 @@ const AddBook = () => {
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Kapak resmi</Form.Label>
+            <Form.Label>Cover image</Form.Label>
             {isCameraOpen ? (
               <CameraPhoto
                 onTakePhoto={(dataUri) => handleTakePhoto(dataUri)}
@@ -240,14 +240,14 @@ const AddBook = () => {
             ) : (
               <>
                 <Button variant="info" className="mb-2" onClick={() => setIsCameraOpen(true)}>
-                  Fotoğraf çek
+                  Take photo
                 </Button>
                 <Form.Control type="file" accept="image/*" onChange={handleUploadImage} />
               </>
             )}
           </Form.Group>
           <Button variant="primary" onClick={handleSaveBook} disabled={isImageUploading}>
-            Kitabı ekle
+            Add book
           </Button>
         </Card>
       )}

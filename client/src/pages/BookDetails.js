@@ -111,7 +111,7 @@ const BookDetails = ({ book }) => {
       ModalContent = (
         <>
           <h5>#{selectedTag.text}</h5>
-          <Button variant="danger" onClick={handleDeleteTag}>Sil</Button>
+          <Button variant="danger" onClick={handleDeleteTag}>Delete</Button>
         </>
       );
       break;
@@ -125,10 +125,10 @@ const BookDetails = ({ book }) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link onClick={() => handleShow('addQuote')}>Alıntı Ekle</Nav.Link>
-            <Nav.Link onClick={() => handleShow('addNote')}>Sayfa Notu Ekle</Nav.Link>
-            <Nav.Link onClick={() => handleShow('addTag')}>Etiket Ekle</Nav.Link>
-            <Nav.Link onClick={() => handleShow('export')}>Dışa Aktar</Nav.Link>
+            <Nav.Link onClick={() => handleShow('addQuote')}>Add Quote</Nav.Link>
+            <Nav.Link onClick={() => handleShow('addNote')}>Add Page Note</Nav.Link>
+            <Nav.Link onClick={() => handleShow('addTag')}>Add Tag</Nav.Link>
+            <Nav.Link onClick={() => handleShow('export')}>Export</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
@@ -142,12 +142,12 @@ const BookDetails = ({ book }) => {
               <Card.Subtitle className="mb-2 text-muted">{book.author}</Card.Subtitle>
               <Card.Text>
                 id: {book._id}
-                <strong>Sayfa Sayısı:</strong> {book.pageCount} <br />
+                <strong> Page Count:</strong> {book.pageCount} <br />
                 <strong>ISBN:</strong> {book.isbn} <br /> <br />
-                Bu kitapta <strong>{quotesCount}</strong> alıntınız ve <strong>{notesCount}</strong> notunuz var!
+                This book has <strong>{quotesCount}</strong> quotes and <strong>{notesCount}</strong> notes!
               </Card.Text>
               <Card.Footer>
-                <strong>Etiketler:</strong>
+                <strong>Tags:</strong>
                 <div className="mt-2">
                   {tags.map(tag => (
                     <span 
@@ -169,10 +169,10 @@ const BookDetails = ({ book }) => {
       <Modal show={showModal !== ''} onHide={handleClose} centered size={showModal === 'viewTag' ? 'sm' : ''}>
         <Modal.Header closeButton>
           <Modal.Title>
-            {showModal === 'addQuote' && 'Alıntı Ekle'}
-            {showModal === 'addNote' && 'Sayfa Notu Ekle'}
-            {showModal === 'export' && 'Dışa Aktar'}
-            {showModal === 'viewTag' && 'Tag Detayları'}
+            {showModal === 'addQuote' && 'Add Quote'}
+            {showModal === 'addNote' && 'Add Page Note'}
+            {showModal === 'export' && 'Export'}
+            {showModal === 'viewTag' && 'Tag Details'}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

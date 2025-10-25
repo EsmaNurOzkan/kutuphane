@@ -5,7 +5,6 @@ import { AppContext } from '../AppContext';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
 
-
 const Notes = ({ book }) => {
   const { notesUpdated, setNotesUpdated } = useContext(AppContext); 
   const [notes, setNotes] = useState([]);
@@ -28,7 +27,7 @@ const Notes = ({ book }) => {
         setNotes(response.data.notes);
         setLoading(false);
       } catch (err) {
-        setError('Notlar getirilirken bir hata oluştu');
+        setError('An error occurred while fetching notes.');
         setLoading(false);
       }
     };
@@ -48,10 +47,10 @@ const Notes = ({ book }) => {
       setNotesUpdated(prev => !prev); 
       setShowEditModal(false);
       setShowDetailModal(false); 
-      setDeleteSuccessMessage('Not başarıyla güncellendi!');
+      setDeleteSuccessMessage('Note updated successfully!');
       setTimeout(() => setDeleteSuccessMessage(''), 2000);
     } catch (error) {
-      setError('Not güncellenirken bir hata oluştu');
+      setError('An error occurred while updating the note.');
     }
   };
 
@@ -59,12 +58,12 @@ const Notes = ({ book }) => {
     try {
       const response = await axios.delete(`${BACKEND_URL}/api/note/${book._id}/${noteId}`);
       setNotes(response.data.notes);
-      setDeleteSuccessMessage('Not başarıyla silindi!');
+      setDeleteSuccessMessage('Note deleted successfully!');
       setNotesUpdated(prev => !prev); 
       setShowDetailModal(false);
       setTimeout(() => setDeleteSuccessMessage(''), 2000);
     } catch (error) {
-      setError('Not silinirken bir hata oluştu');
+      setError('An error occurred while deleting the note.');
     }
   };
 
@@ -108,18 +107,18 @@ const Notes = ({ book }) => {
     <Container className="text-center">
       {deleteSuccessMessage && <Alert variant="success">{deleteSuccessMessage}</Alert>}
       {error && <Alert variant="danger">{error}</Alert>}
-      <h3 className="my-2">Notlarım</h3>
+      <h3 className="my-2">My Notes</h3>
 
       <Container style={{ maxHeight: '45vh', overflowY: 'auto' }}>
-        {notes.length === 0 && !loading && <p>Henüz not almadınız.</p>}
+        {notes.length === 0 && !loading && <p>You haven’t added any notes yet.</p>}
 
         {notes.map((note) => (
           <Card key={note._id} className="my-2" onClick={() => openDetailModal(note)}>
             <Card.Body>
-              <Card.Title>Sayfa {note.pageNo}</Card.Title>
+              <Card.Title>Page {note.pageNo}</Card.Title>
               <Card.Text>{note.text}</Card.Text>
               <Card.Text>
-                <strong>Tagler:</strong> {note.tags.map(tag => `#${tag}`).join(' ')}
+                <strong>Tags:</strong> {note.tags.map(tag => `#${tag}`).join(' ')}
               </Card.Text>
             </Card.Body>
           </Card>
@@ -128,56 +127,56 @@ const Notes = ({ book }) => {
 
       <Modal show={showDetailModal} onHide={closeDetailModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Not Detayı</Modal.Title>
+          <Modal.Title>Note Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedNote && (
             <>
-              <h4>Sayfa: {selectedNote.pageNo}</h4>
+              <h4>Page: {selectedNote.pageNo}</h4>
               <p>{selectedNote.text}</p>
-              <p><strong>Tagler:</strong> {selectedNote.tags.map(tag => `#${tag}`).join(' ')}</p>
+              <p><strong>Tags:</strong> {selectedNote.tags.map(tag => `#${tag}`).join(' ')}</p>
             </>
           )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="danger" onClick={openDeleteConfirmModal}>
-            Sil
+            Delete
           </Button>
           <Button variant="primary" onClick={openEditModal}>
-            Düzenle
+            Edit
           </Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={showDeleteConfirmModal} onHide={closeDeleteConfirmModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Not Silme Onayı</Modal.Title>
+          <Modal.Title>Delete Note Confirmation</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Bu notu silmek istediğinizden emin misiniz?
+          Are you sure you want to delete this note?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeDeleteConfirmModal}>
-            İptal
+            Cancel
           </Button>
           <Button variant="danger" onClick={() => {
             deleteNote(selectedNote._id);
             closeDeleteConfirmModal();
           }}>
-            Sil
+            Delete
           </Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={showEditModal} onHide={closeEditModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Notu Düzenle</Modal.Title>
+          <Modal.Title>Edit Note</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedNote && (
             <Form>
               <Form.Group controlId="editText">
-                <Form.Label>Not İçeriği</Form.Label>
+                <Form.Label>Note Content</Form.Label>
                 <Form.Control
                   as="textarea"
                   rows={5}
@@ -186,7 +185,7 @@ const Notes = ({ book }) => {
                 />
               </Form.Group>
               <Form.Group controlId="editPageNo">
-                <Form.Label>Sayfa Numarası</Form.Label>
+                <Form.Label>Page Number</Form.Label>
                 <Form.Control
                   type="number"
                   value={editPageNo}
@@ -194,7 +193,7 @@ const Notes = ({ book }) => {
                 />
               </Form.Group>
               <Form.Group controlId="editTags">
-                <Form.Label>Tagler</Form.Label>
+                <Form.Label>Tags</Form.Label>
                 <Form.Control
                   type="text"
                   value={editTags}
@@ -202,7 +201,7 @@ const Notes = ({ book }) => {
                 />
               </Form.Group>
               <Button variant="primary" onClick={updateNote}>
-                Güncelle
+                Update
               </Button>
             </Form>
           )}

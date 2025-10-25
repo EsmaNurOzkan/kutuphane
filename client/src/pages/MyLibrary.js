@@ -12,13 +12,13 @@ const MyLibrary = () => {
           className="btn btn-lg btn-primary mb-2"
           onClick={() => navigate('/my-shelve')}
         >
-          Kitaplığım
+          My Books
         </button>
         <button
           className="btn btn-lg btn-success"
           onClick={() => navigate('/add-book')}
         >
-          Kitap Ekle
+          Add Book
         </button>
       </div>
     </div>

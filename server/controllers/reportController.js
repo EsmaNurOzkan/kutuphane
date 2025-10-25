@@ -5,7 +5,7 @@ exports.reportIssue = async (req, res) => {
   const userId = req.user.id; 
 
   if (!firstName || !lastName || !email || !message) {
-    return res.status(400).json({ message: 'Tüm alanlar doldurulmalıdır.' });
+    return res.status(400).json({ message: 'All fields must be filled.' });
   }
 
   try {
@@ -19,9 +19,9 @@ exports.reportIssue = async (req, res) => {
 
     await newComplaint.save();
 
-    res.status(200).json({ message: 'Geribildiriminiz için teşekkürler, talebiniz oluşturulmuştur.' });
+    res.status(200).json({ message: 'Thank you for your feedback, your request has been submitted.' });
   } catch (error) {
-    console.error('Veri işleme hatası:', error);
-    res.status(500).json({ message: 'Sunucu hatası' });
+    console.error('Data processing error:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };

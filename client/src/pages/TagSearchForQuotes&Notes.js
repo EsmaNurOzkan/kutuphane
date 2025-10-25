@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; 
 import { Container, Row, Col, Button, Badge, Card, Form } from 'react-bootstrap';
@@ -43,7 +42,7 @@ const TagSearchForQuotesAndNotes = ({ userId }) => {
         const uniqueTags = [...new Set(allTags)];
         setTags(uniqueTags);
       } catch (error) {
-        console.error('Tagler alınırken bir hata oluştu:', error);
+        console.error('Error fetching tags:', error);
       }
     };
 
@@ -85,22 +84,22 @@ const TagSearchForQuotesAndNotes = ({ userId }) => {
     });
 
     setResults(filteredResults); 
-    console.log('Arama sonuçları:', filteredResults);
+    console.log('Search results:', filteredResults);
   };
 
   const filteredTags = tags.filter(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
     <Container className="mt-4 text-center" >
-      <h3 className="mb-4 ">Tüm Tagler</h3>
+      <h3 className="mb-4 ">All Tags</h3>
       <Form.Control 
-      type="text" 
-      placeholder="Tag ara..." 
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)} 
-      className="mb-3"
-      style={{ width: '14rem', margin: '0 auto' }} 
-    />
+        type="text" 
+        placeholder="Search tag..." 
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)} 
+        className="mb-3"
+        style={{ width: '14rem', margin: '0 auto' }} 
+      />
 
       <Row className="m-2">
         {filteredTags.length > 0 ? (
@@ -127,13 +126,13 @@ const TagSearchForQuotesAndNotes = ({ userId }) => {
             </Col>
           ))
         ) : (
-          <p>Henüz tag bulunamadı.</p>
+          <p>No tags found yet.</p>
         )}
       </Row>
   
       {selectedTags.length > 0 && (
         <Button className="mt-3" variant="primary" onClick={handleSearch}>
-          Seçili Tagler ile Arat
+          Search with Selected Tags
         </Button>
       )}
   
@@ -146,31 +145,28 @@ const TagSearchForQuotesAndNotes = ({ userId }) => {
                 <Card.Body>
                   <Card.Title>{result.bookTitle}</Card.Title>
                   <Card.Text>
-  {result.quotes && result.quotes.map((quote, i) => (
-    <div key={i}>
-      <p><strong><u>Alıntı:</u></strong> "{quote.text}"</p>
-      <p><strong><u>Alıntı notları:</u></strong> "{quote.notes}"</p>
-      <p><strong><u>Tagler:</u></strong> 
-        {quote.tags && quote.tags.map((tag, idx) => (
-          <span key={idx} style={{ marginRight: '8px' }}>#{tag}</span>
-        ))}
-      </p>
-    </div>
-  ))}
-  {result.notes && result.notes.map((note, i) => (
-    <div key={i}>
-      <p><strong><u>Not:</u></strong> {note.text}</p>
-      <p><strong><u>Tagler:</u></strong> 
-        {note.tags && note.tags.map((tag, idx) => (
-          <span key={idx} style={{ marginRight: '0.2rem' }}>#{tag}</span>
-        ))}
-      </p>
-    </div>
-  ))}
-</Card.Text>
-
-                  
-                  
+                    {result.quotes && result.quotes.map((quote, i) => (
+                      <div key={i}>
+                        <p><strong><u>Quote:</u></strong> "{quote.text}"</p>
+                        <p><strong><u>Quote Notes:</u></strong> "{quote.notes}"</p>
+                        <p><strong><u>Tags:</u></strong> 
+                          {quote.tags && quote.tags.map((tag, idx) => (
+                            <span key={idx} style={{ marginRight: '8px' }}>#{tag}</span>
+                          ))}
+                        </p>
+                      </div>
+                    ))}
+                    {result.notes && result.notes.map((note, i) => (
+                      <div key={i}>
+                        <p><strong><u>Note:</u></strong> {note.text}</p>
+                        <p><strong><u>Tags:</u></strong> 
+                          {note.tags && note.tags.map((tag, idx) => (
+                            <span key={idx} style={{ marginRight: '0.2rem' }}>#{tag}</span>
+                          ))}
+                        </p>
+                      </div>
+                    ))}
+                  </Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -179,7 +175,6 @@ const TagSearchForQuotesAndNotes = ({ userId }) => {
       )}
     </Container>
   );
-  
 };
 
 export default TagSearchForQuotesAndNotes;

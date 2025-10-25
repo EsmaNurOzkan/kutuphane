@@ -24,7 +24,7 @@ function Login() {
     } catch (error) {
       console.log("Backend URL:", process.env.REACT_APP_BACKEND_URL);
       console.error('Error logging in:', error.response ? error.response.data : error.message);
-      alert('Giriş yapılırken bir hata oluştu');
+      alert('An error occurred while logging in');
     } finally {
       setLoading(false);
     }
@@ -34,7 +34,7 @@ function Login() {
     <>
       <Helmet>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
         <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet" />
       </Helmet>
@@ -43,27 +43,27 @@ function Login() {
           <Col sm={12} md={8} lg={6} className="mx-auto">
             <Card className="border-0 shadow-lg bg-body" style={{ borderRadius: '3rem', padding: '2rem' }}>
               <Card.Body>
-                <h3 className="text-center mb-4" style={{ fontFamily: 'DM Serif Text, serif' }}>Giriş Yap</h3>
+                <h3 className="text-center mb-4" style={{ fontFamily: 'DM Serif Text, serif' }}>Login</h3>
                 <Form onSubmit={handleSubmit} className="d-flex flex-column">
                   <Form.Group id="email">
-                    <Form.Label style={{ fontFamily: "Cormorant, serif", fontWeight: 600 }}>E-posta</Form.Label>
+                    <Form.Label style={{ fontFamily: "Cormorant, serif", fontWeight: 600 }}>Email</Form.Label>
                     <Form.Control
                       style={{ fontFamily: "Cormorant, serif", fontWeight: 400 }}
                       className="fs-5"
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="E-posta"
+                      placeholder="Email"
                       required
                     />
                   </Form.Group>
                   <Form.Group id="password" className="mt-3">
-                    <Form.Label style={{ fontFamily: "Cormorant, serif", fontWeight: 600 }}>Şifre</Form.Label>
+                    <Form.Label style={{ fontFamily: "Cormorant, serif", fontWeight: 600 }}>Password</Form.Label>
                     <Form.Control
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Şifre"
+                      placeholder="Password"
                       required
                     />
                   </Form.Group>
@@ -72,20 +72,20 @@ function Login() {
                       {loading ? (
                         <>
                           <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
-                          {' '}Giriş yapılıyor...
+                          {' '}Logging in...
                         </>
                       ) : (
-                        'Giriş Yap'
+                        'Login'
                       )}
                     </Button>
                   </div>
                 </Form>
                 <div className="text-center mt-3">
                   <Link to="/reset-password" style={{ fontFamily: "Cormorant, serif", fontWeight: 500 }} className="d-block link-primary">
-                    Şifremi unuttum
+                    Forgot Password
                   </Link>
                   <Link to="/register" style={{ fontFamily: "Cormorant, serif", fontWeight: 500 }} className="d-block link-secondary mt-1">
-                    Kayıt Ol
+                    Sign Up
                   </Link>
                 </div>
               </Card.Body>

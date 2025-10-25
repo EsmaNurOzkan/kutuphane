@@ -39,7 +39,7 @@ const Export = ({ bookId }) => {
   }, [bookId]);
 
   const cleanText = (text) => {
-    return text ? text.replace(/\s+/g, ' ').trim() : 'Metin bulunamadı';
+    return text ? text.replace(/\s+/g, ' ').trim() : 'No text found';
   };
 
   const exportQuotesToPDF = () => {
@@ -47,24 +47,24 @@ const Export = ({ bookId }) => {
       const quote = quotes.find(q => q._id === quoteId);
       if (quote) {
         const cleanedText = cleanText(quote.text);
-        const text = `Sayfa ${quote.pageNo || 'N/A'}: ${cleanedText}`;
-  
+        const text = `Page ${quote.pageNo || 'N/A'}: ${cleanedText}`;
+
         const content = [
           `<p style="margin: 5px; font-size: 12px;">${text}</p>`
         ];
-  
+
         if (quote.quoteNotes && quote.quoteNotes.length > 0) {
           quote.quoteNotes.forEach(note => {
             const noteText = cleanText(note.text);
             content.push(`<p style="margin-left: 10px; font-size: 12px;">- ${noteText}</p>`);
           });
         }
-  
+
         return content.join('');
       }
       return '';
     }).join('');
-  
+
     const element = document.createElement('div');
     element.innerHTML = content;
     html2pdf(element);
@@ -75,13 +75,13 @@ const Export = ({ bookId }) => {
       const note = notes.find(n => n._id === noteId);
       if (note) {
         const cleanedText = cleanText(note.text);
-        const text = `Sayfa ${note.pageNo || 'N/A'}: ${cleanedText}`;
-  
+        const text = `Page ${note.pageNo || 'N/A'}: ${cleanedText}`;
+
         return `<p style="margin: 5px; font-size: 12px;">${text}</p>`;
       }
       return '';
     }).join('');
-  
+
     const element = document.createElement('div');
     element.innerHTML = content;
     html2pdf(element);
@@ -95,7 +95,7 @@ const Export = ({ bookId }) => {
           const quote = quotes.find(q => q._id === quoteId);
           return quote ? [
             new Paragraph({
-              text: `Sayfa ${quote.pageNo || 'N/A'}: ${quote.text}`,
+              text: `Page ${quote.pageNo || 'N/A'}: ${quote.text}`,
               spacing: { before: 200, after: 200 },
             }),
             ...quote.quoteNotes.map(note => new Paragraph({
@@ -121,7 +121,7 @@ const Export = ({ bookId }) => {
         children: selectedNotes.map(noteId => {
           const note = notes.find(n => n._id === noteId);
           return note ? new Paragraph({
-            text: `Sayfa ${note.pageNo || 'N/A'}: ${note.text}`,
+            text: `Page ${note.pageNo || 'N/A'}: ${note.text}`,
             spacing: { before: 200, after: 200 },
           }) : null;
         }).filter(Boolean),
@@ -174,25 +174,25 @@ const Export = ({ bookId }) => {
 
   return (
     <div className="container">
-      <h2>Dışa Aktar</h2>
-      <Button variant="primary" onClick={handleQuotesModal}>Alıntıları Dışa Aktar</Button>{' '}
-      <Button variant="primary" onClick={handleNotesModal}>Notları Dışa Aktar</Button>{' '}
-      <Button variant="primary">Alıntı & Notları Dışa Aktar</Button>
+      <h2>Export</h2>
+      <Button variant="primary" onClick={handleQuotesModal}>Export Quotes</Button>{' '}
+      <Button variant="primary" onClick={handleNotesModal}>Export Notes</Button>{' '}
+      <Button variant="primary">Export Quotes & Notes</Button>
 
       <Modal show={showQuotesModal} size="lg" onHide={handleQuotesModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Alıntıları Dışa Aktar</Modal.Title>
+          <Modal.Title>Export Quotes</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Button variant="info" onClick={handleSelectAllQuotes}>
-            {selectAllQuotes ? 'Tümünü Kaldır' : 'Tümünü Seç'}
+            {selectAllQuotes ? 'Deselect All' : 'Select All'}
           </Button>
           <ListGroup>
             {quotes.map(quote => (
               <ListGroup.Item key={quote._id}>
                 <Form.Check 
                   type="checkbox"
-                  label={`Sayfa ${quote.pageNo || 'N/A'}: ${cleanText(quote.text)}`}
+                  label={`Page ${quote.pageNo || 'N/A'}: ${cleanText(quote.text)}`}
                   checked={selectedQuotes.includes(quote._id)}
                   onChange={() => handleQuoteSelect(quote._id)}
                 />
@@ -201,26 +201,26 @@ const Export = ({ bookId }) => {
           </ListGroup>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleQuotesModal}>Kapat</Button>
-          <Button variant="primary" onClick={exportQuotesToPDF}>PDF Olarak Dışa Aktar</Button>
-          <Button variant="primary" onClick={exportQuotesToWord}>Word Olarak Dışa Aktar</Button>
+          <Button variant="secondary" onClick={handleQuotesModal}>Close</Button>
+          <Button variant="primary" onClick={exportQuotesToPDF}>Export as PDF</Button>
+          <Button variant="primary" onClick={exportQuotesToWord}>Export as Word</Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={showNotesModal} size="lg" onHide={handleNotesModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Notları Dışa Aktar</Modal.Title>
+          <Modal.Title>Export Notes</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Button variant="info" onClick={handleSelectAllNotes}>
-            {selectAllNotes ? 'Tümünü Kaldır' : 'Tümünü Seç'}
+            {selectAllNotes ? 'Deselect All' : 'Select All'}
           </Button>
           <ListGroup>
             {notes.map(note => (
               <ListGroup.Item key={note._id}>
                 <Form.Check 
                   type="checkbox"
-                  label={`Sayfa ${note.pageNo || 'N/A'}: ${cleanText(note.text)}`}
+                  label={`Page ${note.pageNo || 'N/A'}: ${cleanText(note.text)}`}
                   checked={selectedNotes.includes(note._id)}
                   onChange={() => handleNoteSelect(note._id)}
                 />
@@ -229,9 +229,9 @@ const Export = ({ bookId }) => {
           </ListGroup>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleNotesModal}>Kapat</Button>
-          <Button variant="primary" onClick={exportNotesToPDF}>PDF Olarak Dışa Aktar</Button>
-          <Button variant="primary" onClick={exportNotesToWord}>Word Olarak Dışa Aktar</Button>
+          <Button variant="secondary" onClick={handleNotesModal}>Close</Button>
+          <Button variant="primary" onClick={exportNotesToPDF}>Export as PDF</Button>
+          <Button variant="primary" onClick={exportNotesToWord}>Export as Word</Button>
         </Modal.Footer>
       </Modal>
     </div>

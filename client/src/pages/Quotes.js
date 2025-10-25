@@ -1,12 +1,9 @@
-
-
 import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, Button, Card, ListGroup, Modal, Form, Alert, Spinner } from 'react-bootstrap';
 import { AppContext } from '../AppContext';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
-
 
 const Quotes = ({ book }) => {
   const { quotesUpdated, setQuotesUpdated } = useContext(AppContext); 
@@ -20,7 +17,6 @@ const Quotes = ({ book }) => {
   const [noteToDelete, setNoteToDelete] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false); 
-
 
   useEffect(() => {
     const fetchQuotes = async () => {
@@ -71,7 +67,7 @@ const Quotes = ({ book }) => {
   const handleSaveChanges = async () => {
     const emptyNote = editQuote.quoteNotes.some(note => note.text.trim() === '');
     if (emptyNote) {
-      setErrorMessage('Lütfen not alanını boş bırakmayın!');
+      setErrorMessage('Please do not leave any note empty!');
       return;
     }
 
@@ -94,15 +90,14 @@ const Quotes = ({ book }) => {
 
       setSelectedQuote(response.data.quote);
 
-      alert('Değişiklikler başarıyla kaydedildi.');
+      alert('Changes have been saved successfully.');
       setTimeout(() => {
         handleCloseEditModal();
         handleCloseDetailsModal();
-
       }, 2000);
     } catch (error) {
       console.error('Save changes error:', error);
-      alert('Değişiklikler kaydedilirken bir hata oluştu.');
+      alert('An error occurred while saving changes.');
     }
   };
 
@@ -125,13 +120,13 @@ const Quotes = ({ book }) => {
         }
       });
       setQuotes(quotes.filter(q => q._id !== selectedQuote._id));
-      setQuotesUpdated(prev => !prev); // global state'i güncelle
+      setQuotesUpdated(prev => !prev);
       handleCloseDeleteModal();
       handleCloseDetailsModal();
       alert(response.data.message);
     } catch (error) {
       console.error('Delete error:', error);
-      alert('Silme işlemi sırasında bir hata oluştu.');
+      alert('An error occurred while deleting.');
     }
   };
 
@@ -158,11 +153,11 @@ const Quotes = ({ book }) => {
       const updatedSelectedQuote = { ...selectedQuote, quoteNotes: (selectedQuote.quoteNotes || []).filter(note => note._id !== noteToDelete) };
       setSelectedQuote(updatedSelectedQuote);
 
-      alert('Not başarıyla silindi.');
+      alert('Note has been deleted successfully.');
       handleCloseDeleteNoteModal();
     } catch (error) {
-      console.error('Not silme hatası:', error);
-      alert('Not silinirken bir hata oluştu.');
+      console.error('Note deletion error:', error);
+      alert('An error occurred while deleting the note.');
     }
   };
 
@@ -181,24 +176,23 @@ const Quotes = ({ book }) => {
 
   return (
     <Container className="text-center">
-      <h3 my-2>Alıntılarım</h3>
+      <h3 my-2>My Quotes</h3>
       <Container style={{maxHeight: '45vh', overflowY: 'auto'}}>
         {loading ? ( 
           <div>
             <Spinner animation="border" role="status">
-              <span className="sr-only">Alıntılar yükleniyor...</span>
+              <span className="sr-only">Loading quotes...</span>
             </Spinner>
-            
           </div>
         ) : (
           quotes.length === 0 ? (
-            <p>Henüz alıntı yapmadınız.</p>
+            <p>You haven't added any quotes yet.</p>
           ) : (
             quotes.map((quote) => (
               <Card key={quote._id} className="my-2" onClick={() => handleShowDetailsModal(quote)}>
                 <Card.Body>
                   <Card.Title>{quote.text}</Card.Title>
-                  <Card.Subtitle className="mb-2 text-muted">Sayfa Numarası: {quote.pageNo}</Card.Subtitle>
+                  <Card.Subtitle className="mb-2 text-muted">Page Number: {quote.pageNo}</Card.Subtitle>
                 </Card.Body>
               </Card>
             ))
@@ -208,79 +202,79 @@ const Quotes = ({ book }) => {
 
       <Modal show={showDetailsModal} onHide={handleCloseDetailsModal} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Alıntı Detayları</Modal.Title>
+          <Modal.Title>Quote Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedQuote && (
             <div>
-              <h4>Alıntı Metni</h4>
+              <h4>Quote Text</h4>
               <p>{selectedQuote.text}</p>
-              <h4>Sayfa Numarası</h4>
+              <h4>Page Number</h4>
               <p>{selectedQuote.pageNo}</p>
-              <h4>Notlar</h4>
+              <h4>Notes</h4>
               <ListGroup>
                 {selectedQuote.quoteNotes && selectedQuote.quoteNotes.length > 0 ? (
                   selectedQuote.quoteNotes.map((note) => (
                     <ListGroup.Item key={note._id} className="d-flex justify-content-between align-items-center">
                       {note.text}
                       <Button variant="danger" size="sm" onClick={() => handleShowDeleteNoteModal(note._id)}>
-                        Sil
+                        Delete
                       </Button>
                     </ListGroup.Item>
                   ))
                 ) : (
-                  <p>Not yok</p>
+                  <p>No notes</p>
                 )}
               </ListGroup>
-              <h4>Tag'ler</h4>
+              <h4>Tags</h4>
               <p>
                 {selectedQuote.tags && selectedQuote.tags.length > 0 ? (
-                  selectedQuote.tags.map(tag => `#${tag}`).join(', ') // # Display tags with #
+                  selectedQuote.tags.map(tag => `#${tag}`).join(', ')
                 ) : (
-                  'Tag yok'
+                  'No tags'
                 )}
               </p>
-              <Button variant="primary" onClick={handleEditQuote}>Düzenle</Button>
-              <Button variant="danger" onClick={handleShowDeleteModal}>Sil</Button>
+              <Button variant="primary" onClick={handleEditQuote}>Edit</Button>
+              <Button variant="danger" onClick={handleShowDeleteModal}>Delete</Button>
             </div>
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseDetailsModal}>Kapat</Button>
+          <Button variant="secondary" onClick={handleCloseDetailsModal}>Close</Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={showEditModal} onHide={handleCloseEditModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Alıntıyı Düzenle</Modal.Title>
+          <Modal.Title>Edit Quote</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group controlId="formQuoteText">
-              <Form.Label>Alıntı Metni</Form.Label>
+              <Form.Label>Quote Text</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Alıntı metnini girin"
+                placeholder="Enter quote text"
                 value={editQuote.text}
                 onChange={(e) => setEditQuote({ ...editQuote, text: e.target.value })}
               />
             </Form.Group>
             <Form.Group controlId="formPageNo">
-              <Form.Label>Sayfa Numarası</Form.Label>
+              <Form.Label>Page Number</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Sayfa numarasını girin"
+                placeholder="Enter page number"
                 value={editQuote.pageNo}
                 onChange={(e) => setEditQuote({ ...editQuote, pageNo: e.target.value })}
               />
             </Form.Group>
             <Form.Group controlId="formQuoteNotes">
-              <Form.Label>Notlar</Form.Label>
+              <Form.Label>Notes</Form.Label>
               {editQuote.quoteNotes.map((note, index) => (
                 <div key={index} className="mb-2">
                   <Form.Control
                     type="text"
-                    placeholder="Notu girin"
+                    placeholder="Enter note"
                     value={note.text}
                     onChange={(e) => {
                       const updatedNotes = [...editQuote.quoteNotes];
@@ -297,14 +291,14 @@ const Quotes = ({ book }) => {
                   quoteNotes: [...editQuote.quoteNotes, { text: '' }]
                 })}
               >
-                Not Ekle
+                Add Note
               </Button>
             </Form.Group>
             <Form.Group controlId="formTags">
-              <Form.Label>Tag'ler</Form.Label>
+              <Form.Label>Tags</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Tag'leri girin (virgül ile ayırın)"
+                placeholder="Enter tags (comma separated)"
                 value={editQuote.tags.join(', ')}
                 onChange={(e) => setEditQuote({ ...editQuote, tags: e.target.value.split(',').map(tag => tag.trim()) })}
               />
@@ -313,34 +307,34 @@ const Quotes = ({ book }) => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseEditModal}>Kapat</Button>
-          <Button variant="primary" onClick={handleSaveChanges}>Kaydet</Button>
+          <Button variant="secondary" onClick={handleCloseEditModal}>Close</Button>
+          <Button variant="primary" onClick={handleSaveChanges}>Save</Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Alıntıyı Sil</Modal.Title>
+          <Modal.Title>Delete Quote</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Bu alıntıyı silmek istediğinize emin misiniz?</p>
+          <p>Are you sure you want to delete this quote?</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseDeleteModal}>Hayır</Button>
-          <Button variant="danger" onClick={handleDeleteQuote}>Evet, Sil</Button>
+          <Button variant="secondary" onClick={handleCloseDeleteModal}>No</Button>
+          <Button variant="danger" onClick={handleDeleteQuote}>Yes, Delete</Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={showDeleteNoteModal} onHide={handleCloseDeleteNoteModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Notu Sil</Modal.Title>
+          <Modal.Title>Delete Note</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Bu notu silmek istediğinize emin misiniz?</p>
+          <p>Are you sure you want to delete this note?</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseDeleteNoteModal}>Hayır</Button>
-          <Button variant="danger" onClick={handleDeleteNote}>Evet, Sil</Button>
+          <Button variant="secondary" onClick={handleCloseDeleteNoteModal}>No</Button>
+          <Button variant="danger" onClick={handleDeleteNote}>Yes, Delete</Button>
         </Modal.Footer>
       </Modal>
     </Container>

@@ -20,12 +20,12 @@ const AddNote = ({ bookId, pageCount, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!text || !pageNo) {
-      setError('Not içeriği ve sayfa numarası zorunludur.');
+      setError('Note content and page number are required.');
       return;
     }
 
     if (pageNo > pageCount) {
-      setError(`Sayfa sayısını aştınız. Lütfen ${pageCount} veya daha düşük bir değer girin.`);
+      setError(`You exceeded the page count. Please enter ${pageCount} or a lower value.`);
       setTimeout(() => setError(''), 3000);
       return;
     }
@@ -39,14 +39,14 @@ const AddNote = ({ bookId, pageCount, onSuccess }) => {
         pageNo,
         tags: tagsArray
       });
-      setSuccess('Not başarıyla eklendi.');
+      setSuccess('Note added successfully.');
       setError('');
       setNotesUpdated(true); 
       
       if (onSuccess) onSuccess();
 
     } catch (error) {
-      setError('Not eklenirken hata oluştu');
+      setError('An error occurred while adding the note.');
       setSuccess("");
     }
   };
@@ -62,11 +62,11 @@ const AddNote = ({ bookId, pageCount, onSuccess }) => {
       {success && <Alert variant="success">{success}</Alert>}
       {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
 
-      <h2>Sayfa Notu Ekle</h2>
+      <h2>Add Page Note</h2>
       <p>Book ID: {bookId}</p>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="text">
-          <Form.Label>Not İçeriği</Form.Label>
+          <Form.Label>Note Content</Form.Label>
           <Form.Control
             as="textarea"
             rows={5}
@@ -76,10 +76,10 @@ const AddNote = ({ bookId, pageCount, onSuccess }) => {
           />
         </Form.Group>
         <Button variant="secondary" onClick={() => setShowOcrModal(true)}>
-          OCR ile Doldur
+          Fill with OCR
         </Button>
         <Form.Group controlId="pageNo">
-          <Form.Label>Sayfa Numarası</Form.Label>
+          <Form.Label>Page Number</Form.Label>
           <Form.Control
             value={pageNo}
             onChange={(e) => setPageNo(e.target.value)}
@@ -87,31 +87,31 @@ const AddNote = ({ bookId, pageCount, onSuccess }) => {
           />
         </Form.Group>
         <Form.Group controlId="tags">
-          <Form.Label>Tagler (virgülle ayırarak yazın)</Form.Label>
+          <Form.Label>Tags (separate with commas)</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Tagler"
+            placeholder="Tags"
             value={tags}
             onChange={(e) => setTags(e.target.value)}
           />
         </Form.Group>
 
         <Button variant="primary" type="submit">
-          Not Ekle
+          Add Note
         </Button>
       </Form>
 
       {/* OCR Modal */}
       <Modal show={showOcrModal} onHide={() => setShowOcrModal(false)} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>OCR İşlemi</Modal.Title>
+          <Modal.Title>OCR Process</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Ocr target={text} onResultsSubmit={handleOcrSubmit} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowOcrModal(false)}>
-            Kapat
+            Close
           </Button>
         </Modal.Footer>
       </Modal>

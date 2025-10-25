@@ -33,7 +33,7 @@ const TagSearchForBook = ({ userId }) => {
           setAllBooks(books);
           setFilteredBooks(books); 
         } catch (error) {
-          console.error('Tagler alınırken bir hata oluştu:', error);
+          console.error('Error fetching tags:', error);
         }
       };
   
@@ -81,11 +81,11 @@ const TagSearchForBook = ({ userId }) => {
   
     return (
       <Container className="mt-4 text-center">
-        <h3 className="mb-4">Tüm Tagler</h3>
+        <h3 className="mb-4">All Tags</h3>
   
         <Form.Control
           type="text"
-          placeholder="Tag ara..."
+          placeholder="Search tag..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="mb-3"
@@ -116,50 +116,49 @@ const TagSearchForBook = ({ userId }) => {
               </Col>
             ))
           ) : (
-            <p>Henüz tag bulunamadı.</p>
+            <p>No tags found yet.</p>
           )}
         </Row>
   
         <Row className="mt-4">
-  {filteredBooks.length > 0 ? (
-    filteredBooks.map((book, index) => (
-      <Col key={index} xs={12} sm={6} md={4} lg={3} className="mb-4">
-        <Card style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <Card.Img variant="top" src={getBookCoverUrl(book)} alt={book.title} />
-          <Card.Body style={{ flex: '1 0 auto' }}>
-            <Card.Title>{book.title}</Card.Title>
-            <Card.Subtitle className="mb-2 text-muted">{book.author}</Card.Subtitle>
-            <Card.Text>
-              <strong>Sayfa Sayısı:</strong> {book.pageCount} <br />
-              <strong>ISBN:</strong> {book.isbn} <br />
-            </Card.Text>
-          </Card.Body>
-          <Card.Footer style={{ flexShrink: 0 }}>
-            <strong>Etiketler:</strong>
-            <div className="mt-2">
-              {book.tags.map(tag => (
-                <span 
-                  key={tag._id} 
-                  className="badge bg-primary text-white me-1" 
-                  style={{ fontWeight: 'bold', cursor: 'pointer' }} 
-                  onClick={() => handleTagClick(tag)}
-                >
-                  #{tag.text}
-                </span>
-              ))}
-            </div>
-          </Card.Footer>
-        </Card>
-      </Col>
-    ))
-  ) : (
-    <p>Kitap bulunamadı.</p>
-  )}
-</Row>
+          {filteredBooks.length > 0 ? (
+            filteredBooks.map((book, index) => (
+              <Col key={index} xs={12} sm={6} md={4} lg={3} className="mb-4">
+                <Card style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                  <Card.Img variant="top" src={getBookCoverUrl(book)} alt={book.title} />
+                  <Card.Body style={{ flex: '1 0 auto' }}>
+                    <Card.Title>{book.title}</Card.Title>
+                    <Card.Subtitle className="mb-2 text-muted">{book.author}</Card.Subtitle>
+                    <Card.Text>
+                      <strong>Page Count:</strong> {book.pageCount} <br />
+                      <strong>ISBN:</strong> {book.isbn} <br />
+                    </Card.Text>
+                  </Card.Body>
+                  <Card.Footer style={{ flexShrink: 0 }}>
+                    <strong>Tags:</strong>
+                    <div className="mt-2">
+                      {book.tags.map(tag => (
+                        <span 
+                          key={tag._id} 
+                          className="badge bg-primary text-white me-1" 
+                          style={{ fontWeight: 'bold', cursor: 'pointer' }} 
+                          onClick={() => handleTagClick(tag)}
+                        >
+                          #{tag.text}
+                        </span>
+                      ))}
+                    </div>
+                  </Card.Footer>
+                </Card>
+              </Col>
+            ))
+          ) : (
+            <p>No books found.</p>
+          )}
+        </Row>
 
       </Container>
     );
-  };
+};
   
-  export default TagSearchForBook;
-  
+export default TagSearchForBook;

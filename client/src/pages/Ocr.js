@@ -41,7 +41,7 @@ const Ocr = ({ target, onResultsSubmit }) => {
       }
     } catch (err) {
       console.error('OCR Error:', err);
-      setError('OCR işlemi sırasında bir hata oluştu.');
+      setError('An error occurred during the OCR process.');
     } finally {
       setLoading(false);
     }
@@ -49,7 +49,7 @@ const Ocr = ({ target, onResultsSubmit }) => {
 
   const handleCameraError = (error) => {
     console.error('Camera Error:', error);
-    setError('Kamera işlemi sırasında bir hata oluştu.');
+    setError('An error occurred while using the camera.');
   };
 
   const handleSubmit = () => {
@@ -60,17 +60,17 @@ const Ocr = ({ target, onResultsSubmit }) => {
 
   return (
     <div>
-      <h4>Burası OCR sayfası.</h4>
+      <h4>This is the OCR page.</h4>
       {error && <div className="alert alert-danger">{error}</div>}
       {loading && (
         <div className="text-center">
           <Spinner animation="border" />
-          <p>OCR işleniyor...</p>
+          <p>Processing OCR...</p>
         </div>
       )}
       <Form.Group>
         <Button variant="primary" onClick={() => document.getElementById('fileInput').click()}>
-          Cihazdan Yükle
+          Upload from Device
         </Button>
         <input
           id="fileInput"
@@ -81,14 +81,14 @@ const Ocr = ({ target, onResultsSubmit }) => {
           onChange={handleImageUpload}
         />
         <Button variant="secondary" onClick={() => setCameraOpen(true)}>
-          Kameradan Çek
+          Take Photo
         </Button>
       </Form.Group>
 
       {cameraOpen && (
         <Modal show={cameraOpen} onHide={() => setCameraOpen(false)} size="lg">
           <Modal.Header closeButton>
-            <Modal.Title>Kamera</Modal.Title>
+            <Modal.Title>Camera</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Camera
@@ -98,7 +98,7 @@ const Ocr = ({ target, onResultsSubmit }) => {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={() => setCameraOpen(false)}>
-              Kapat
+              Close
             </Button>
           </Modal.Footer>
         </Modal>
@@ -106,7 +106,7 @@ const Ocr = ({ target, onResultsSubmit }) => {
 
       {ocrResults && (
         <Form.Group>
-          <Form.Label>OCR Sonuçları</Form.Label>
+          <Form.Label>OCR Results</Form.Label>
           <Form.Control
             as="textarea"
             rows={10}
@@ -114,7 +114,7 @@ const Ocr = ({ target, onResultsSubmit }) => {
             onChange={(e) => setOcrResults(e.target.value)}
           />
           <Button variant="primary" className="mt-2" onClick={handleSubmit}>
-            Tamam
+            Confirm
           </Button>
         </Form.Group>
       )}
