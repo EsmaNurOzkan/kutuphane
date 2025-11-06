@@ -20,20 +20,34 @@ const upload = multer({ storage });
 
 exports.addBook = async (req, res) => {
   try {
-    const { title, author, pageCount, isbn, coverImage } = req.body;
+    const { title, author, publisher, pageCount, isbn, coverImage, publishDate } = req.body;
     const userId = req.user.id;
 
-    if (!title || !author || !pageCount ) {
+    if (!title || !author || !pageCount) {
       return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    const existingBook = await Book.findOne({
+      user: userId,
+      $or: [
+        { isbn: isbn || null },
+        { title: title.trim(), author: author.trim() }
+      ],
+    });
+
+    if (existingBook) {
+      return res.status(400).json({ message: 'This book is already in your library.' });
     }
 
     const newBook = new Book({
       user: userId,
       title,
       author,
+      publisher,
+      publishDate,
       pageCount,
       isbn,
-      coverImage
+      coverImage,
     });
 
     await newBook.save();
@@ -44,6 +58,7 @@ exports.addBook = async (req, res) => {
     res.status(500).json({ message: 'An error occurred while adding the book.' });
   }
 };
+
 
 exports.uploadCoverImage = (req, res) => {
   upload.single('coverImage')(req, res, (err) => {
@@ -73,7 +88,6 @@ exports.getMyShelve = async (req, res) => {
   }
 };
 
-
 exports.searchBooks = async (req, res) => {
   try {
     const { query } = req.query;
@@ -87,17 +101,30 @@ exports.searchBooks = async (req, res) => {
       },
     });
 
+    const books = response.data.items.map(item => {
+      const volumeId = item.id;
+      const imageLinks = item.volumeInfo.imageLinks || {};
 
+      let coverImage = imageLinks.extraLarge ||
+                       imageLinks.large ||
+                       imageLinks.medium ||
+                       `https://books.google.com/books/content?id=${volumeId}&printsec=frontcover&img=1&zoom=4&source=gbs_api`;
 
-    const books = response.data.items.map(item => ({
-      title: item.volumeInfo.title,
-      author: item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown',
-      pageCount: item.volumeInfo.pageCount,
-      isbn: item.volumeInfo.industryIdentifiers ? item.volumeInfo.industryIdentifiers.find(id => id.type === 'ISBN_13')?.identifier : 'Unknown',
-      coverImage: item.volumeInfo.imageLinks && item.volumeInfo.imageLinks.thumbnail
-        ? item.volumeInfo.imageLinks.thumbnail
-        : 'uploads/whitecover2.jpg', 
-    }));
+      if (coverImage.startsWith('http://')) {
+        coverImage = coverImage.replace('http://', 'https://');
+      }
+
+      return {
+        title: item.volumeInfo.title,
+        author: item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown',
+        publisher: item.volumeInfo.publisher || 'Unknown',
+        publishDate: item.volumeInfo.publishedDate || 'Unknown',
+        pageCount: item.volumeInfo.pageCount,
+        isbn: item.volumeInfo.industryIdentifiers ? item.volumeInfo.industryIdentifiers.find(id => id.type === 'ISBN_13')?.identifier : 'Unknown',
+        coverImage
+      };
+    });
+
     res.status(200).json(books);
 
   } catch (error) {

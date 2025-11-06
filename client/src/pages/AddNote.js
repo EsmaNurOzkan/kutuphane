@@ -62,9 +62,17 @@ const AddNote = ({ bookId, pageCount, onSuccess }) => {
       {success && <Alert variant="success">{success}</Alert>}
       {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
 
-      <h2>Add Page Note</h2>
-      <p>Book ID: {bookId}</p>
       <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="pageNo">
+          <Form.Label>Page Number</Form.Label>
+          <Form.Control
+            value={pageNo}
+            onChange={(e) => setPageNo(e.target.value)}
+            required
+            className='w-75'
+            type='number'
+          />
+        </Form.Group>
         <Form.Group controlId="text">
           <Form.Label>Note Content</Form.Label>
           <Form.Control
@@ -73,19 +81,17 @@ const AddNote = ({ bookId, pageCount, onSuccess }) => {
             value={text}
             onChange={(e) => setText(e.target.value)}
             required
+            className='w-75'
           />
         </Form.Group>
-        <Button variant="secondary" onClick={() => setShowOcrModal(true)}>
+        <div
+          className="d-flex justify-content-end mt-2"
+          style={{ paddingRight: "5.5rem" }}>
+        <Button className='btn-sm' variant="secondary" onClick={() => setShowOcrModal(true)}>
           Fill with OCR
         </Button>
-        <Form.Group controlId="pageNo">
-          <Form.Label>Page Number</Form.Label>
-          <Form.Control
-            value={pageNo}
-            onChange={(e) => setPageNo(e.target.value)}
-            required
-          />
-        </Form.Group>
+        </div>
+        
         <Form.Group controlId="tags">
           <Form.Label>Tags (separate with commas)</Form.Label>
           <Form.Control
@@ -93,15 +99,19 @@ const AddNote = ({ bookId, pageCount, onSuccess }) => {
             placeholder="Tags"
             value={tags}
             onChange={(e) => setTags(e.target.value)}
+            className='w-75'
           />
         </Form.Group>
-
-        <Button variant="primary" type="submit">
+        <div
+          className="d-flex justify-content-end mt-2"
+          style={{ paddingRight: "5.5rem" }} 
+          >
+        <Button className='btn-sm' variant="primary" type="submit">
           Add Note
         </Button>
+        </div>
       </Form>
 
-      {/* OCR Modal */}
       <Modal show={showOcrModal} onHide={() => setShowOcrModal(false)} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>OCR Process</Modal.Title>

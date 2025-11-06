@@ -11,6 +11,7 @@ import MyNavbar from "./pages/MyNavbar"
 import ResetPassword from './pages/auth/ResetPassword';
 import MyLibrary from './pages/MyLibrary';
 import MyShelve from "./pages/MyShelve";
+import BookDetails from './pages/BookDetails';
 import QuickNotes from './pages/QuickNotes';
 import ReportIssue from "./pages/ReportIssue";
 import AddBook from './pages/AddBook';
@@ -89,6 +90,7 @@ function App() {
         <Route path="/my-library" element={!!localStorage.getItem('token') ? <MyLibrary /> : <Navigate to="/login" />} />
         <Route path="/add-book" element={!!localStorage.getItem('token') ? <AddBook /> : <Navigate to="/login" />} />
         <Route path="/my-shelve" element={!!localStorage.getItem('token') ? <MyShelve userId={userId} /> : <Navigate to="/login" />} />
+        <Route path="/book/:bookId" element={!!localStorage.getItem('token') ? <BookDetails userId={userId} /> : <Navigate to="/login" />}/>
         <Route path="/tag-search" element={!!localStorage.getItem('token') ? <TagSearchForQuotesAndNotes userId={userId} /> : <Navigate to="/login" />} />
         <Route path="/tag-search-books" element={!!localStorage.getItem('token') ? <TagSearchForBook userId={userId} /> : <Navigate to="/login" />} />
         <Route path="/view-mode" element={!!localStorage.getItem('token') ? <ViewMode /> : <Navigate to="/login" />} />

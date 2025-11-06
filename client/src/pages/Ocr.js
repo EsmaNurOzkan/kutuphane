@@ -60,7 +60,6 @@ const Ocr = ({ target, onResultsSubmit }) => {
 
   return (
     <div>
-      <h4>This is the OCR page.</h4>
       {error && <div className="alert alert-danger">{error}</div>}
       {loading && (
         <div className="text-center">
@@ -69,7 +68,7 @@ const Ocr = ({ target, onResultsSubmit }) => {
         </div>
       )}
       <Form.Group>
-        <Button variant="primary" onClick={() => document.getElementById('fileInput').click()}>
+        <Button className='btn-sm' variant="primary" onClick={() => document.getElementById('fileInput').click()}>
           Upload from Device
         </Button>
         <input
@@ -80,7 +79,7 @@ const Ocr = ({ target, onResultsSubmit }) => {
           style={{ display: 'none' }}
           onChange={handleImageUpload}
         />
-        <Button variant="secondary" onClick={() => setCameraOpen(true)}>
+        <Button className='btn-sm' variant="secondary" onClick={() => setCameraOpen(true)}>
           Take Photo
         </Button>
       </Form.Group>
@@ -97,7 +96,7 @@ const Ocr = ({ target, onResultsSubmit }) => {
             />
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setCameraOpen(false)}>
+            <Button className='btn-sm' variant="secondary" onClick={() => setCameraOpen(false)}>
               Close
             </Button>
           </Modal.Footer>

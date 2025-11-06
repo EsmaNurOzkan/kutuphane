@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import axios from 'axios';
-import { Form, Button, Alert, Modal } from 'react-bootstrap';
+import { Form, Button, Alert, Modal, ButtonGroup } from 'react-bootstrap';
 import Ocr from './Ocr'; 
 import { AppContext } from '../AppContext';
 
@@ -104,15 +104,17 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-2">
       {error && <Alert variant="danger">{error}</Alert>}
       {success && <Alert variant="success">{success}</Alert>}
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="pageNo">
           <Form.Label>Page Number</Form.Label>
           <Form.Control
+            type='number'
             value={pageNo}
             onChange={handlePageNoChange}
+            className='w-75'
             required 
           />
         </Form.Group>       
@@ -124,10 +126,18 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
             rows={5}
             value={quoteText}
             onChange={handleQuoteTextChange}
+            className='w-75'
           />
-          <Button variant="secondary" className="mt-2" onClick={handleTextOcrClick}>
+
+          <div
+          className="d-flex justify-content-end mt-2"
+          style={{ paddingRight: "5.5rem" }} 
+          >            
+          <Button variant="secondary" className="btn-sm mt-2" onClick={handleTextOcrClick}>
             Fill with OCR
           </Button>
+
+          </div>
         </Form.Group>
 
         <Form.Group controlId="quoteNotes">
@@ -136,21 +146,47 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
             <div key={index} className="d-flex mb-2 align-items-center">
               <Form.Control
                 as="textarea"
-                rows={3}
+                rows={2}
                 value={note.text}
                 onChange={(e) => handleQuoteNoteChange(index, e)}
+                className="w-75"
+
               />
-              <Button variant="danger" className="ms-2" onClick={() => removeQuoteNote(index)}>
+        <ButtonGroup style={{ gap: "1", marginRight: "0" }}>
+                <Button 
+                  variant="danger" 
+                  className="ms-3" 
+                  style={{
+                  fontSize: "0.75rem",
+                  padding: "1px 4px",
+                  marginRight: "-1px" 
+                  }} 
+                  onClick={() => removeQuoteNote(index)}>
                 Delete
               </Button>
-              <Button variant="secondary" className="ms-2" onClick={() => handleNoteOcrClick(index)}>
+              <Button 
+              variant="secondary"  
+              className="ms-2" 
+              onClick={() => handleNoteOcrClick(index)}
+              style={{
+                  fontSize: "0.75rem",
+                  padding: "1px 4px",
+                  marginRight: "-1px" 
+                  }} 
+              >
                 OCR
               </Button>
+              </ButtonGroup>
             </div>
           ))}
+          <div
+          className="d-flex justify-content-end mt-2"
+          style={{ paddingRight: "5.5rem" }} 
+        >
           <Button variant="primary" className="btn-sm mb-2" onClick={addQuoteNote}>
             Add more notes
           </Button>
+          </div>
         </Form.Group>
 
         <Form.Group controlId="tags">
@@ -159,12 +195,19 @@ const AddQuote = ({ bookId, pageCount, onSuccess }) => {
             type="text"
             placeholder="Tags"
             onChange={handleTagsChange}
-          />
-        </Form.Group>
-
-        <Button variant="success" type="submit">
+            className="w-75"
+              />
+        <div
+          className="d-flex justify-content-end mt-2"
+          style={{ paddingRight: "5.5rem" }}
+        >        
+      <Button className='btn-sm' variant="success" type="submit">
           Save
         </Button>
+        </div> 
+        </Form.Group>
+
+          
       </Form>
 
       <Modal show={showOcrModal} onHide={() => setShowOcrModal(false)} size="lg">

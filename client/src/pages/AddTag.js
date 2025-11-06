@@ -39,37 +39,39 @@ const AddTag = ({ bookId, onSuccess }) => {
   };
 
   return (
-    <Container>
-      <Row className="justify-content-md-center">
-        <Col md={6}>
-          <h2 className="text-center mb-4">Add Tag</h2>
-          <p className="text-center">Book ID: {bookId}</p>
-          <Form onSubmit={handleSubmit}>
+    <Container>        
+        <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formTag">
-              <Form.Label>Tag:</Form.Label>
+              <Form.Label>Tag(s):</Form.Label>
               <Form.Control
                 type="text"
                 value={tagText}
                 onChange={(e) => setTagText(e.target.value)}
                 placeholder="Enter a tag"
+                className='w-75'
               />
             </Form.Group>
-            <Button variant="primary" onClick={handleAddTag} className="mb-3">
+            <div
+          className="d-flex justify-content-end mt-2"
+          style={{ paddingRight: "5.5rem" }}>
+            <Button variant="primary" onClick={handleAddTag} className="btn-sm mb-3">
               Add Tag
             </Button>
+            </div>
             <ListGroup className="mb-3">
               {tags.map((tag, index) => (
                 <ListGroup.Item key={index}>{tag}</ListGroup.Item>
               ))}
             </ListGroup>
-            <Button variant="success" type="submit" block>
+            <div className='d-flex justify-content-center'>
+              <Button className='btn-sm' variant="success" type="submit" block>
               Submit Tags
             </Button>
+            </div>
           </Form>
           {message && <Alert variant="success" className="mt-3">{message}</Alert>}
           {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
-        </Col>
-      </Row>
+        
     </Container>
   );
 };

@@ -2,16 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Card, Col, Row, Container, Button, ListGroup, Modal, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import BookDetails from './BookDetails';
-import Quotes from './Quotes';
-import Notes from './Notes';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
 
 const MyShelve = ({ userId }) => {
   const [books, setBooks] = useState([]);
   const [viewMode, setViewMode] = useState('grid');
-  const [selectedBook, setSelectedBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [bookToDelete, setBookToDelete] = useState(null);
@@ -33,9 +29,7 @@ const MyShelve = ({ userId }) => {
       }
     };
 
-    if (userId) {
-      fetchBooks();
-    }
+    if (userId) fetchBooks();
   }, [userId]);
 
   const handleDeleteBook = async () => {
@@ -43,9 +37,7 @@ const MyShelve = ({ userId }) => {
 
     try {
       await axios.delete(`${BACKEND_URL}/api/my-shelve/book/${bookToDelete}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
       });
       setBooks(books.filter((book) => book._id !== bookToDelete));
       setShowDeleteModal(false);
@@ -57,13 +49,7 @@ const MyShelve = ({ userId }) => {
   };
 
   const handleSelectBook = (book) => {
-    setSelectedBook(book);
-  };
-
-  const handleViewMode = () => {
-    if (selectedBook) {
-      navigate('/view-mode', { state: { book: selectedBook } });
-    }
+navigate(`/book/${book._id}`, { state: { userId, book } });
   };
 
   return (
@@ -107,17 +93,17 @@ const MyShelve = ({ userId }) => {
                           <Card.Subtitle className="mb-2 text-muted">{book.author}</Card.Subtitle>
                           <Card.Text>
                             <strong>Page Count:</strong> {book.pageCount}<br />
-                            <strong>ISBN:</strong> {book.isbn || 'N/A'}
                           </Card.Text>
                           <Button 
                             variant="danger" 
                             size="sm" 
+                            className='m-3 opacity-85'
                             onClick={(e) => { 
                               e.stopPropagation(); 
                               setBookToDelete(book._id);
                               setShowDeleteModal(true); 
                             }}
-                            style={{ position: 'absolute', bottom: '10px', right: '10px' }}
+                            style={{ position: 'absolute', bottom: '10px', right: '10px', fontSize:"0.8rem" }}
                           >
                             Delete
                           </Button>
@@ -162,39 +148,6 @@ const MyShelve = ({ userId }) => {
             </ListGroup>
           )}
         </>
-      )}
-
-      {selectedBook && (
-        <Modal show={true} onHide={() => setSelectedBook(null)} size="lg">
-          <Modal.Header closeButton>
-            <Modal.Title>{selectedBook.title}</Modal.Title>
-            <Button variant="primary" className="ml-auto" onClick={handleViewMode}>
-              Reading Mode
-            </Button>
-          </Modal.Header>
-          <Modal.Body>
-            <Row>
-              <Col md={6} className="d-flex flex-column justify-content-center align-items-center">
-                <BookDetails book={selectedBook} />
-              </Col>
-              <Col md={6} className="d-flex flex-column justify-content-center align-items-center">
-                <Row className="w-100 mb-2">
-                  <Col className="d-flex justify-content-center">
-                    <Quotes book={selectedBook} />
-                  </Col>
-                </Row>
-                <Row className="w-100">
-                  <Col className="d-flex justify-content-center">
-                    <Notes book={selectedBook} />
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => setSelectedBook(null)}>Close</Button>
-          </Modal.Footer>
-        </Modal>
       )}
 
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>

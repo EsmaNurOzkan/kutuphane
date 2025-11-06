@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Form, Button, ListGroup, Alert, Spinner, Modal } from 'react-bootstrap';
+import { Container, Form, ListGroup, Modal, Spinner, Alert, Row, Col, ButtonGroup, Button } from "react-bootstrap";
+
+
 import Ocr from './Ocr';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; 
@@ -94,85 +96,122 @@ function QuickNotes() {
   };
 
   return (
-    <Container className="my-4">
-      {error && <Alert variant="danger">{error}</Alert>}
-      
-      {loading ? (
-        <div className="text-center">
-          <p>Loading your notes...</p>
-          <Spinner animation="border" />
-        </div>
-      ) : (
-        <>
-          <Form>
-            <Form.Group controlId="formNote">
-              <Form.Label>Add a new note</Form.Label>
-              <Form.Control
-                type="text"
-                as="textarea"
-                rows={7}
-                value={newNote}
-                onChange={(e) => setNewNote(e.target.value)}
-                placeholder="Enter your note"
-              />
-            </Form.Group>
-            <Button variant="primary" onClick={handleAddNote} className="mt-2">
-              Add Note
-            </Button>
-            <Button variant="secondary" className="mt-2 ml-2" onClick={() => setShowOcrModal(true)}>
-              OCR
-            </Button>
-          </Form>
-  
-          <div className="mt-4">
-            <h4>My Quick Notes</h4>
-            <ListGroup>
-              {notes.length === 0 ? (
-                <ListGroup.Item>No notes found</ListGroup.Item>
-              ) : (
-                notes.map((note) => (
-                  <ListGroup.Item
-                    key={note._id}
-                    onClick={() => {
-                      setSelectedNote(note);
-                      setEditNote(note.noteContent);
-                    }}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    {note.noteContent} - {new Date(note.date).toLocaleString()}
-                  </ListGroup.Item>
-                ))
-              )}
-            </ListGroup>
-          </div>
+  <Container className="my-5">
+  {error && <Alert variant="danger">{error}</Alert>}
 
-          {selectedNote && (
-            <Modal show={true} onHide={() => setSelectedNote(null)} size="lg">
-              <Modal.Header closeButton>
-                <Modal.Title>Edit Note</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form.Control
-                  as="textarea"
-                  rows={5}
-                  value={editNote}
-                  onChange={(e) => setEditNote(e.target.value)}
-                />
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="primary" onClick={handleEditNote}>
-                  Save
-                </Button>
-                <Button variant="danger" onClick={handleDeleteNote}>
-                  Delete Note
-                </Button>
-              </Modal.Footer>
-            </Modal>
+  {loading ? (
+    <div className="text-center ">
+      <Spinner animation="border" role="status" />
+      <p className="mt-3">Loading your notes...</p>
+    </div>
+  ) : (
+    <>
+      <Form>
+        <Form.Group controlId="formNote">
+          <Form.Label className="fw-bold text-center d-block">Add a New Note</Form.Label>
+          <Form.Control
+            type="text"
+            as="textarea"
+            rows={5}
+            value={newNote}
+            onChange={(e) => setNewNote(e.target.value)}
+            placeholder="Enter your note here..."
+            className="shadow-sm"
+            style={{ borderRadius: '10px' }}
+          />
+        </Form.Group>
+<div
+  style={{
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginTop: "10px",
+    paddingRight: "20px",
+  }}
+>
+  <ButtonGroup style={{ gap: "1", marginRight: "0" }}>
+    <Button
+      variant="primary"
+      onClick={handleAddNote}
+      className="fw-bold shadow-sm"
+      style={{
+        borderRadius: "8px 0 0 8px",
+        marginRight: "-1px" 
+      }}
+    >
+      Add Note
+    </Button>
+
+    <Button
+      variant="outline-secondary"
+      onClick={() => setShowOcrModal(true)}
+      className="fw-bold shadow-sm"
+      style={{
+        borderRadius: "0 8px 8px 0",
+      }}
+    >
+      OCR
+    </Button>
+  </ButtonGroup>
+</div>
+
+      </Form>
+      <div className="mt-5">
+        <h4 className="mb-3 fw-bold">My Quick Notes</h4>
+        <ListGroup>
+          {notes.length === 0 ? (
+            <ListGroup.Item className="text-center text-muted">No notes found</ListGroup.Item>
+          ) : (
+            notes.map((note) => (
+              <ListGroup.Item
+                key={note._id}
+                onClick={() => {
+                  setSelectedNote(note);
+                  setEditNote(note.noteContent);
+                }}
+                style={{
+                  cursor: 'pointer',
+                  borderRadius: '8px',
+                  marginBottom: '8px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
+                }}
+                className="d-flex justify-content-between align-items-start"
+              >
+                <div>{note.noteContent}</div>
+                <small className="text-muted">{new Date(note.date).toLocaleString()}</small>
+              </ListGroup.Item>
+            ))
           )}
-        </>
+        </ListGroup>
+      </div>
+
+      {selectedNote && (
+        <Modal show={true} onHide={() => setSelectedNote(null)} size="lg" centered>
+          <Modal.Header closeButton>
+            <Modal.Title>Edit Note</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Control
+              as="textarea"
+              rows={5}
+              value={editNote}
+              onChange={(e) => setEditNote(e.target.value)}
+              className="shadow-sm"
+              style={{ borderRadius: '10px' }}
+            />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="success" onClick={handleEditNote} className="fw-bold">
+              Save
+            </Button>
+            <Button variant="danger" onClick={handleDeleteNote} className="fw-bold">
+              Delete
+            </Button>
+          </Modal.Footer>
+        </Modal>
       )}
 
-      <Modal show={showOcrModal} onHide={() => setShowOcrModal(false)} size="lg">
+      <Modal show={showOcrModal} onHide={() => setShowOcrModal(false)} size="lg" centered>
         <Modal.Header closeButton>
           <Modal.Title>OCR Process</Modal.Title>
         </Modal.Header>
@@ -180,13 +219,20 @@ function QuickNotes() {
           <Ocr target={newNote} onResultsSubmit={handleOcrSubmit} />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowOcrModal(false)}>
+          <Button variant="secondary" onClick={() => setShowOcrModal(false)} className="fw-bold">
             Close
           </Button>
         </Modal.Footer>
       </Modal>
-    </Container>
-  );
+    </>
+  )}
+
+
+
+</Container>
+
+
+);
 }
 
 export default QuickNotes;

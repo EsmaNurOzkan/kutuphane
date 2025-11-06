@@ -22,10 +22,6 @@ app.use(cors());
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 app.use(express.static(path.join(__dirname, '../client/build')));
 
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
-// });
-
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

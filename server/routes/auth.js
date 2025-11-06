@@ -15,8 +15,6 @@ router.post('/resetpassword', resetPassword);
 
 router.post('/send-code', sendVerificationCode);
 
-
-
 router.get('/home', authenticateToken, (req, res) => {
   res.send('This is a protected route');
 });

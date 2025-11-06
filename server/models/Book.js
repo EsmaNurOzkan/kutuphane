@@ -53,7 +53,6 @@ const noteSchema = new Schema({
 }, { _id: true });
 
 
-
 const bookSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -68,9 +67,17 @@ const bookSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  publisher: {
+    type: String,
+    required: false
+  },
   pageCount: {
     type: Number,
     required: true
+  },
+  publishDate: { 
+    type: Date,
+    required: false
   },
   isbn: {
     type: String,
