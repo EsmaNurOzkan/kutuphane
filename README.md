@@ -5,7 +5,7 @@
   <img src="./client/src/assets/screenshots/library-ss-4.png" alt="Image 4" width="320" />
 </p>
 
-# Library MERN Web Application
+# Library Web Application
 
 This project is a **Library Management Web Application** built with the MERN stack (MongoDB, Express, React, Node.js).
 Users can manage books, add quotes and notes, and export their data.
