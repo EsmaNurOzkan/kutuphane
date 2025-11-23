@@ -67,10 +67,10 @@ function Register() {
 
   return (
     <>
-      <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh' }}>
+      <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: '80vh' }}>
         <Row className="w-100">
           <Col sm={12} md={8} lg={6} className="mx-auto">
-            <Card className="border-0 shadow-lg bg-body" style={{ borderRadius: '3rem', padding: '1.5rem' }}>
+            <Card className="border-0 shadow-lg bg-body" style={{ borderRadius: '3rem', padding: '1rem' }}>
               <Card.Body>
                 <h3 className="text-center mb-4">Register</h3>
                 <Form onSubmit={handleSubmit}>
@@ -107,9 +107,12 @@ function Register() {
                     />
                   </Form.Group>
 
-                  <Button type="submit" className="w-100">
-                    Register
-                  </Button>
+                  <div className="d-flex justify-content-center">
+                <Button type="submit">
+                  Register
+                </Button>
+              </div>
+
                 </Form>
 
                 {message && <p className="text-success text-center mt-3">{message}</p>}
