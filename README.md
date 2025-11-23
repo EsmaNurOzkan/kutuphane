@@ -1,10 +1,8 @@
 <p float="left">
-  <img src="./client/src/assets/screenshots/IMG_4112.PNG" alt="Image 1" width="250" />
-  <img src="./client/src/assets/screenshots/IMG_4113.PNG" alt="Image 2" width="250" />
-  <img src="./client/src/assets/screenshots/IMG_4114.PNG" alt="Image 3" width="250" />
-  <img src="./client/src/assets/screenshots/IMG_4115.PNG" alt="Image 4" width="250" />
-  <img src="./client/src/assets/screenshots/IMG_4116.PNG" alt="Image 5" width="250" />
-  <img src="./client/src/assets/screenshots/IMG_4117.PNG" alt="Image 6" width="250" />
+  <img src="./client/src/assets/screenshots/library-ss-1" alt="Image 1" width="250" />
+  <img src="./client/src/assets/screenshots/library-ss-2" alt="Image 2" width="250" />
+  <img src="./client/src/assets/screenshots/library-ss-3" alt="Image 3" width="250" />
+  <img src="./client/src/assets/screenshots/library-ss-4" alt="Image 4" width="250" />
 </p>
 
 # Library MERN Web Application
