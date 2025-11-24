@@ -1,14 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.4f7593e8.css",
-    "main.js": "/static/js/main.23c175ed.js",
+    "main.css": "/static/css/main.c22eff3a.css",
+    "main.js": "/static/js/main.f200bcc0.js",
     "static/media/shelve3.png": "/static/media/shelve3.ec87e1fce0650b36f899.png",
+    "static/media/Roboto-Medium.ttf": "/static/media/Roboto-Medium.116fcd4fd987818c5d98.ttf",
     "index.html": "/index.html",
-    "main.4f7593e8.css.map": "/static/css/main.4f7593e8.css.map",
-    "main.23c175ed.js.map": "/static/js/main.23c175ed.js.map"
+    "main.c22eff3a.css.map": "/static/css/main.c22eff3a.css.map",
+    "main.f200bcc0.js.map": "/static/js/main.f200bcc0.js.map"
   },
   "entrypoints": [
-    "static/css/main.4f7593e8.css",
-    "static/js/main.23c175ed.js"
+    "static/css/main.c22eff3a.css",
+    "static/js/main.f200bcc0.js"
   ]
 }
